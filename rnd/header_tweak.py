@@ -15,6 +15,18 @@ data_3 = data[:8] + b'blahbla' + data[15:]
 value = b'1234567890123456789'
 data_3 = data_3[:23] + bytes([len(value), 0, 0, 0]) + value + data_3[46:]
 
+# remove all metadata
+data_4 = (
+    data[:354]
+    # data[:353]
+    # data[:352]
+    # data[:351]
+    # data[:350]
+    # data[:349]
+    + data[410:]
+)
+
+
 # # Add new string attr
 # value = b'xxxxxxxx'
 # data_4 = (
