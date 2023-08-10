@@ -15,16 +15,46 @@ data_3 = data[:8] + b'blahbla' + data[15:]
 value = b'1234567890123456789'
 data_3 = data_3[:23] + bytes([len(value), 0, 0, 0]) + value + data_3[46:]
 
-# Change "owner" attr
-value = b'Copyright 2004 Industrial Light & Magic'
-data_4 = (
-    data[:354]
-    + b'aaaaa\x00string\x00'
-    # + bytes([len(value), 0, 0, 0])
-    + value
-    + b'\x00'
-    + data[410:]
-)
+# # Add new string attr
+# value = b'xxxxxxxx'
+# data_4 = (
+#     data[:410]
+#     + b'bla\x00string\x00'
+#     + bytes([len(value), 0, 0, 0])
+#     + value
+#     + data[410:]
+# )
+
+
+# # Add new string attr
+# value = b'xxxxxxxx'
+# data_4 = (
+#     data[:410]
+#     + b'bla\x00string\x00'
+#     + value
+#     + b'\x00'
+#     + data[410:]
+# )
+
+# # Move the owner attr around.
+# owner = data[354:410]
+# data_4 = (
+#     data[:8]
+#     + owner
+#     + data[8:]
+# )
+# # Duplicate "owner" attr
+# value = b'Copyright 2004 Industrial Light & Magic'
+# data_4 = (
+#     data[:354]
+#     + b'owner\x00string\x00'
+#     + bytes([len(value), 0, 0, 0])
+#     + value
+#     + b'abcde\x00string\x00'
+#     + bytes([len(value), 0, 0, 0])
+#     + value
+#     + data[410:]
+# )
 
 # # Add new string attr
 # value = b'xxxxxxxxxxxxxxxxxxx'
