@@ -54,18 +54,20 @@ magic_number = [0x76, 0x2f, 0x31, 0x01]
 version = [2, 0]
 flags = [0, 0]
 
-# channels_value = chars('G') + null + inthex(1) + [0] + [0, 0, 0] + inthex(1) + inthex(1) + chars('Z') + null + inthex(2) + [0] + [0, 0, 0] + inthex(1) + inthex(1) + null
+channels_value = (
+    # channel name, pixel type, pLinear, reserved, xSampling, ySampling
+    chars('G') + null + inthex(1) + [0] + [0, 0, 0] + inthex(1) + inthex(1)
+    + chars('Z') + null + inthex(2) + [0] + [0, 0, 0] + inthex(1) + inthex(1)
+    + null
+)
 exr_data_bytes = (
     magic_number + version + flags
     # attr name + null + attr type + null
     + chars('channels') + null + chars('chlist') + null
     # attr length
-    + inthex(37)
+    + inthex(len(channels_value))
     # attr value:
-    # channel name, pixel type, pLinear, reserved, xSampling, ySampling
-    + chars('G') + null + inthex(1) + [0] + [0, 0, 0] + inthex(1) + inthex(1)
-    + chars('Z') + null + inthex(2) + [0] + [0, 0, 0] + inthex(1) + inthex(1) + null
-
+    + channels_value
 )
 
 
