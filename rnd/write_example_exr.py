@@ -46,19 +46,25 @@ exr_data_bytes = (
     0xf3, 0x9a, 0x3c, 0x4d, 0xad, 0x98, 0x3e, 0x1c, 0x14, 0x08, 0x3f, 0x4c, 0xf3, 0x03, 0x3f,
 )
 
+inthex = lambda x: list(int(x).to_bytes(4, 'little'))
+chars = lambda x: list(x.encode('ascii'))
+
 null = [0x0]
 magic_number = [0x76, 0x2f, 0x31, 0x01]
 version = [2, 0]
 flags = [0, 0]
+
+# channels_value = chars('G') + null + inthex(1) + [0] + [0, 0, 0] + inthex(1) + inthex(1) + chars('Z') + null + inthex(2) + [0] + [0, 0, 0] + inthex(1) + inthex(1) + null
 exr_data_bytes = (
     magic_number + version + flags
     # attr name + null + attr type + null
-    + list(b'channels') + null + list(b'chlist') + null
+    + chars('channels') + null + chars('chlist') + null
     # attr length
-    + list(int(37).to_bytes(4, 'little'))
+    + inthex(37)
     # attr value:
-    # channel name
-    + b'G' + null + b'HALF'
+    # channel name, pixel type, pLinear, reserved, xSampling, ySampling
+    + chars('G') + null + inthex(1) + [0] + [0, 0, 0] + inthex(1) + inthex(1)
+    + chars('Z') + null + inthex(2) + [0] + [0, 0, 0] + inthex(1) + inthex(1) + null
 
 )
 
