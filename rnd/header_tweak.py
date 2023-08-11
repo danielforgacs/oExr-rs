@@ -1,9 +1,10 @@
 """
 image:
-https://raw.githubusercontent.com/AcademySoftwareFoundation/openexr-images/main/ScanLines/Blobbies.exr
+https://raw.githubusercontent.com/AcademySoftwareFoundation/openexr-images/main/ScanLines/Blobbies.exr -o Blobbies.exr
 """
 
-fname = 'original_metalong.exr'
+fname = 'Blobbies.exr'
+fname = 'example_exr_from_docs.exr'
 with open(fname, 'rb') as sourcef:
     data = sourcef.read()
 
@@ -41,6 +42,22 @@ data_5 = (
     + bytes([len(value), 0, 0, 0])
     + value
     + data[456:]
+)
+
+# shorten attrib value, rewrite offsets
+null = b'\x00'
+attr = b'A'
+attrtype = b'string'
+value = b'B'
+data_6 = (
+    data[:8]
+    + attr
+    + null
+    + attrtype
+    + null
+    + bytes([len(value), 0, 0, 0])
+    + value
+    + data[8:]
 )
 
 # # remove all metadata
@@ -138,4 +155,4 @@ data_5 = (
 
 
 with open('result.exr', 'wb') as destf:
-    destf.write(bytes(data_5))
+    destf.write(bytes(data_6))
