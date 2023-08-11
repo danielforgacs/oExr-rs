@@ -3,7 +3,7 @@ image:
 https://raw.githubusercontent.com/AcademySoftwareFoundation/openexr-images/main/ScanLines/Blobbies.exr
 """
 
-fname = 'Blobbies.exr'
+fname = 'original_metalong.exr'
 with open(fname, 'rb') as sourcef:
     data = sourcef.read()
 
@@ -25,6 +25,22 @@ data_4 = (
     + bytes([len(value), 0, 0, 0])
     + value
     + data[46:]
+)
+
+# PARTIALLY WORKS, houdini can't read the image: rewrite existing metadata
+null = b'\x00'
+attr = b'custom_very_long_metadat'
+attrtype = b'string'
+value = b'aaaaaaaabbbbbbbbccccccccddddddddeeeeeeeeffffffffgggggggg00000000111111112222222233333333444444445555555566666666777777778888888899999999'
+data_5 = (
+    data[:283]
+    + attr
+    + null
+    + attrtype
+    + null
+    + bytes([len(value), 0, 0, 0])
+    + value
+    + data[456:]
 )
 
 # # remove all metadata
@@ -122,4 +138,4 @@ data_4 = (
 
 
 with open('result.exr', 'wb') as destf:
-    destf.write(bytes(data_4))
+    destf.write(bytes(data_5))
