@@ -1,4 +1,4 @@
-use crate::exrheader::*;
+use crate::header::*;
 
 const MAGIC_NUMBER: [u8;4] = [0x76, 0x2f, 0x31, 0x01];
 const VERSION: [u8; 4] = [0x02, 0x00, 0x00, 0x00];
