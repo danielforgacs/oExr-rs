@@ -60,7 +60,7 @@ channels_value = (
     + chars('Z') + null + inthex(2) + [0] + [0, 0, 0] + inthex(1) + inthex(1)
     + null
 )
-exr_data_bytes = (
+exr_data_bytes_2 = (
     magic_number + version + flags
     # attr name + null + attr type + null
     + chars('channels') + null + chars('chlist') + null
