@@ -1,14 +1,12 @@
-mod exr;
-mod header;
+mod structs;
 mod prelude {
-    pub use crate::exr::*;
+    pub use crate::structs::exr::*;
 }
 use prelude::*;
 
 use std::fs::{write, read};
 
 fn main() {
-    let header = header::Header {};
     let data = read("example_exr_from_docs.exr").unwrap();
     let example_exr = Exr::deserialize(data);
     let exr = Exr::new();
