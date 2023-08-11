@@ -1,9 +1,12 @@
+use crate::exrheader::*;
+
 const MAGIC_NUMBER: [u8;4] = [0x76, 0x2f, 0x31, 0x01];
 const VERSION: [u8; 4] = [0x02, 0x00, 0x00, 0x00];
 
 pub struct Exr {
     magic_number: [u8;4],
     version: [u8;4],
+    header: Header,
 }
 
 impl Exr {
@@ -11,6 +14,7 @@ impl Exr {
         Self {
             magic_number: MAGIC_NUMBER,
             version: VERSION,
+            header: Header {},
         }
     }
 
@@ -28,6 +32,7 @@ impl Exr {
         Self {
             magic_number,
             version,
+            header: Header {},
         }
     }
 
