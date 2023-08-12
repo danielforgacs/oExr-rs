@@ -30,11 +30,7 @@ impl Exr {
             .collect::<Vec<u8>>()
             .try_into()
             .unwrap();
-        let header = if data[..=8] == CHANNELS {
-            Header::deserialize(data)
-        } else {
-            Header::new()
-        };
+        let header = Header::deserialize(data);
         Self {
             magic_number,
             version,
