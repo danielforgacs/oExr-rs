@@ -40,6 +40,7 @@ impl Exr {
         let mut buffer = Vec::new();
         buffer.extend(self.magic_number);
         buffer.extend(self.version);
+        buffer.extend(self.header.serialise());
         buffer
     }
 }
