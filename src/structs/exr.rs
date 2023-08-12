@@ -29,7 +29,7 @@ impl Exr {
             .collect::<Vec<u8>>()
             .try_into()
             .unwrap();
-        let header = Header::deserialise(data);
+        let header = Header::deserialize(data);
         Self {
             magic_number,
             version,
@@ -41,7 +41,7 @@ impl Exr {
         let mut buffer = Vec::new();
         buffer.extend(self.magic_number);
         buffer.extend(self.version);
-        buffer.extend(self.header.serialise());
+        buffer.extend(self.header.serialize());
         buffer
     }
 

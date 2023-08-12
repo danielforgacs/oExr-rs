@@ -11,7 +11,9 @@ fn main() {
     {
         let data = read("example_exr_from_docs.exr").unwrap();
         let example_exr = Exr::deserialize(data);
-        let exr = Exr::new(example_exr.get_header());
+        let exr = Exr::new(
+            example_exr.get_header()
+        );
         let data = exr.serialize();
         write("test_result.exr", data).unwrap();
     }

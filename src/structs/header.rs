@@ -13,14 +13,14 @@ impl Header {
         }
     }
 
-    pub fn deserialise(data: Vec<u8>) -> Self {
+    pub fn deserialize(data: Vec<u8>) -> Self {
         let channels = Chlist::deserialise(data);
         Self {
             channels,
         }
     }
 
-    pub fn serialise(&self) -> Vec<u8> {
+    pub fn serialize(&self) -> Vec<u8> {
         self.channels.serialise()
     }
 }
