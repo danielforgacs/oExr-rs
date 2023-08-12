@@ -9,4 +9,8 @@ impl Chlist {
     pub fn deserialise(data: Vec<u8>) -> Self {
         Self {}
     }
+
+    pub fn serialise(&self) -> Vec<u8> {
+        vec![]
+    }
 }
