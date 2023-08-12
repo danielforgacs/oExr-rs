@@ -1,3 +1,3 @@
 pub mod exr;
-mod header;
+pub mod header;
 mod chlist;

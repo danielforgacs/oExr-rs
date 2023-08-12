@@ -6,6 +6,13 @@ pub struct Header {
 }
 
 impl Header {
+    pub fn new() -> Self {
+        let channels = Chlist::new();
+        Self {
+            channels,
+        }
+    }
+
     pub fn serialise(&self) -> Vec<u8> {
         vec![]
     }
