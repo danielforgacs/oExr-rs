@@ -2,6 +2,7 @@ use super::header::*;
 
 const MAGIC_NUMBER: [u8;4] = [0x76, 0x2f, 0x31, 0x01];
 const VERSION: [u8; 4] = [0x02, 0x00, 0x00, 0x00];
+const CHANNELS: [u8; 8] = [b'c', b'h', b'a', b'n', b'n', b'e', b'l', b's',];
 
 pub struct Exr {
     magic_number: [u8;4],
@@ -29,7 +30,11 @@ impl Exr {
             .collect::<Vec<u8>>()
             .try_into()
             .unwrap();
-        let header = Header::deserialize(data);
+        let header = if data[..=8] == CHANNELS {
+            Header::deserialize(data)
+        } else {
+            Header::new()
+        };
         Self {
             magic_number,
             version,
