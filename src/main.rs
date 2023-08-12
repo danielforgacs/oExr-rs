@@ -10,9 +10,9 @@ use prelude::*;
 
 fn main() {
     {
-        let data = read("example_exr_from_docs.exr").unwrap();
+        let data = read("sample_file.exr").unwrap();
         let example_exr = exr::Exr::deserialize(data);
         let data = example_exr.serialize();
-        write("test_result.exr", data).unwrap();
+        write("sample_file-rewrite.exr", data).unwrap();
     }
 }
