@@ -29,10 +29,11 @@ impl Exr {
             .collect::<Vec<u8>>()
             .try_into()
             .unwrap();
+        let header = Header::deserialise(data);
         Self {
             magic_number,
             version,
-            header: Header {},
+            header,
         }
     }
 
