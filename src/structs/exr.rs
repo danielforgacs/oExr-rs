@@ -10,11 +10,11 @@ pub struct Exr {
 }
 
 impl Exr {
-    pub fn new() -> Self {
+    pub fn new(header: Header) -> Self {
         Self {
             magic_number: MAGIC_NUMBER,
             version: VERSION,
-            header: Header {},
+            header,
         }
     }
 
@@ -42,5 +42,9 @@ impl Exr {
         buffer.extend(self.version);
         buffer.extend(self.header.serialise());
         buffer
+    }
+
+    pub fn get_header(&self) -> Header {
+        self.header.clone()
     }
 }
