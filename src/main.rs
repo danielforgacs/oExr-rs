@@ -15,11 +15,12 @@ fn main() {
         let data = exr.serialize();
         write("test_result.exr", data).unwrap();
     }
-    let exr = Exr::new(
-        Header::new(),
-    );
-    let data = exr.serialize();
-    write("test_result_0.exr", data).unwrap();
 
-
+    {
+        let exr = Exr::new(
+            Header::new(),
+        );
+        let data = exr.serialize();
+        write("test_result_0.exr", data).unwrap();
+    }
 }
