@@ -1,3 +1,5 @@
+// Getting bytes until the next null byte.
+// the null byte is put back.
 pub fn parse_until_null(data: &mut Vec<u8>) -> String {
     let mut text = String::new();
     loop {
