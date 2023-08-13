@@ -30,6 +30,7 @@ impl Exr {
             panic!("Version does not match.");
         };
         let header = header::Header::deserialize(&mut data);
+        data.drain(..1);
         let offset_tables = data
             .drain(..25)
             .collect::<Vec<u8>>()
@@ -46,9 +47,17 @@ impl Exr {
 
     pub fn serialize(&self) -> Vec<u8> {
         let mut buffer = Vec::new();
+        let length = self.magic_number.len()
+            + self.version.len()
+            + self.header.serialize().len();
+        println!(":: magic length: {}", self.magic_number.len());
+        println!(":: version length: {}", self.version.len());
+        println!(":: header length: {}", self.header.serialize().len());
+        println!(":: magic + version + header length: {}", length);
         buffer.extend(self.magic_number);
         buffer.extend(self.version);
         buffer.extend(self.header.serialize());
+        buffer.push(0);
         buffer.extend(self.offset_tables.clone());
         buffer.extend(self.pixel_data.clone());
         buffer
