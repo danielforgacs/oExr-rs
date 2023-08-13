@@ -2,16 +2,19 @@ use super::super::utils;
 
 pub struct Header {
     original_bytes: Vec<u8>,
+    data_window: [u32; 4],
 }
 
 impl Header {
     pub fn deserialize(data: &mut Vec<u8>) -> Self {
         let mut original_bytes: Vec<u8> = Vec::new();
+        let mut data_window = [0, 0, 0, 0];
         loop {
             // This loop is extracting attr name, attr type and attr data tuples.
             // The last data must (?) be "screenWindowWidth". Data after that
             // belongs to the offset tables
             let name = utils::parse_until_null(data);
+
             original_bytes.extend(name.bytes().clone());
             data.drain(..1);
             original_bytes.push(0);
@@ -28,15 +31,23 @@ impl Header {
             let attr_bytes_count = u32::from_le_bytes(attr_bytes_count.try_into().unwrap());
             println!("  attribute len: {}", &attr_bytes_count);
 
-            let attr_data: Vec<u8> = data.drain(..attr_bytes_count as usize).collect();
+            let mut attr_data: Vec<u8> = data.drain(..attr_bytes_count as usize).collect();
             original_bytes.extend(attr_data.clone());
             println!("  attribute data: {:02X?}", &attr_data);
 
             if &name == "screenWindowWidth" {
                 break;
             }
+
+            if &name == "dataWindow" {
+                let int_bytes: [u8; 4] = attr_data.drain(..4).collect::<Vec<u8>>().try_into().unwrap();
+                data_window[0] = u32::from_le_bytes(int_bytes);
+            }
         }
-        Self { original_bytes }
+        Self {
+            original_bytes,
+            data_window,
+        }
     }
 
     pub fn serialize(&self) -> Vec<u8> {
