@@ -33,8 +33,6 @@ impl Header {
             println!("  attribute data: {:02X?}", &attr_data);
 
             if &name == "screenWindowWidth" {
-                data.push(0);
-                original_bytes.push(0);
                 break;
             }
         }
