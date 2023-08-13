@@ -46,6 +46,19 @@ impl Header {
             let attr_data: Vec<u8> = data.drain(..attr_bytes_count as usize).collect();
             println!("  attribute data: {:02X?}", &attr_data);
 
+            if &name == "dataWindow" {
+                let mut temp_data = attr_data.clone();
+                let x_min: [u8; 4] = temp_data.drain(..4).collect::<Vec<u8>>().try_into().unwrap();
+                let x_min = u32::from_le_bytes(x_min);
+                let y_min: [u8; 4] = temp_data.drain(..4).collect::<Vec<u8>>().try_into().unwrap();
+                let y_min = u32::from_le_bytes(y_min);
+                let x_max: [u8; 4] = temp_data.drain(..4).collect::<Vec<u8>>().try_into().unwrap();
+                let x_max = u32::from_le_bytes(x_max);
+                let y_max: [u8; 4] = temp_data.drain(..4).collect::<Vec<u8>>().try_into().unwrap();
+                let y_max = u32::from_le_bytes(y_max);
+                println!(":: data window: {}, {}, {}, {}", x_min, y_min, x_max, y_max);
+            }
+
             attributes.push(
                 Attribute {
                     name: name.clone(),
