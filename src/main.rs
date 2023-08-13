@@ -2,6 +2,7 @@ mod structs;
 mod utils;
 mod prelude {
     pub use std::fs::{write, read};
+    pub use std::collections::HashMap;
     pub use super::structs::exr;
 }
 use prelude::*;
