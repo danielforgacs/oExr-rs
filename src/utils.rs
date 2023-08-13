@@ -6,6 +6,7 @@ pub fn parse_until_null(data: &mut Vec<u8>) -> String {
             text.push(letter as char);
             continue;
         }
+        data.insert(0, 0);
         break;
     }
     text
