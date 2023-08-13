@@ -8,7 +8,7 @@ pub struct Exr {
     version: [u8;4],
     header: header::Header,
     offset_tables: Vec<u8>,
-    leftover_bytes: Vec<u8>,
+    pixel_data: Vec<u8>,
 }
 
 impl Exr {
@@ -40,7 +40,7 @@ impl Exr {
             version,
             header,
             offset_tables,
-            leftover_bytes: data,
+            pixel_data: data,
         }
     }
 
@@ -50,7 +50,7 @@ impl Exr {
         buffer.extend(self.version);
         buffer.extend(self.header.serialize());
         buffer.extend(self.offset_tables.clone());
-        buffer.extend(self.leftover_bytes.clone());
+        buffer.extend(self.pixel_data.clone());
         buffer
     }
 }
