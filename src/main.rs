@@ -3,7 +3,6 @@ mod utils;
 mod prelude {
     pub use std::fs::{write, read};
     pub use super::structs::exr;
-    pub use super::utils::*;
 }
 use prelude::*;
 

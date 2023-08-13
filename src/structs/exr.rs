@@ -1,10 +1,12 @@
+use super::header;
+
 const MAGIC_NUMBER: [u8; 4] = [0x76, 0x2f, 0x31, 0x01];
 const VERSION: [u8; 4] = [0x02, 0x00, 0x00, 0x00];
 
 pub struct Exr {
     magic_number: [u8;4],
     version: [u8;4],
-    header: Vec<u8>,
+    header: header::Header,
     offset_tables: Vec<u8>,
     leftover_bytes: Vec<u8>,
 }
@@ -27,11 +29,7 @@ impl Exr {
         if version != VERSION {
             panic!("Version does not match.");
         };
-        let header = data
-            .drain(..288)
-            .collect::<Vec<u8>>()
-            .try_into()
-            .unwrap();
+        let header = header::Header::deserialize(&mut data);
         let offset_tables = data
             .drain(..25)
             .collect::<Vec<u8>>()
@@ -50,7 +48,7 @@ impl Exr {
         let mut buffer = Vec::new();
         buffer.extend(self.magic_number);
         buffer.extend(self.version);
-        buffer.extend(self.header.clone());
+        buffer.extend(self.header.serialize());
         buffer.extend(self.offset_tables.clone());
         buffer.extend(self.leftover_bytes.clone());
         buffer
