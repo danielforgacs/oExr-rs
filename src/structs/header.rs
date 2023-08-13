@@ -30,14 +30,12 @@ impl Header {
             println!("  attribute data: {:02X?}", &attr_data);
 
             if &name == "screenWindowWidth" {
+                data.push(0);
+                raw_data.push(0);
                 break;
             }
         }
-        // let header = data
-        //     .drain(..288)
-        //     .collect::<Vec<u8>>()
-        //     .try_into()
-        //     .unwrap();
+        println!("raw data: {} \n{:02X?}", raw_data.len(), &raw_data);
         Self { data: raw_data }
     }
 
