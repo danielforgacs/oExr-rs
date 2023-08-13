@@ -35,7 +35,6 @@ impl Header {
                 break;
             }
         }
-        println!("raw data: {} \n{:02X?}", raw_data.len(), &raw_data);
         Self { data: raw_data }
     }
 
