@@ -1,4 +1,5 @@
 mod exr;
+mod funcs;
 mod prelude {
     pub use std::fs::{write, read};
     pub use std::collections::HashMap;
