@@ -22,8 +22,22 @@ mod test {
     use super::*;
 
     #[test]
-    fn test_re_serializing_ok() {
+    fn test_re_serializing_ok__01() {
         let data = read("sample_file.exr").unwrap();
+        let example_exr = exr::Exr::deserialize(data.clone());
+        assert_eq!(example_exr.serialize(), data);
+    }
+
+    #[test]
+    fn test_re_serializing_ok__02() {
+        let data = read("../../_temp/original.exr").unwrap();
+        let example_exr = exr::Exr::deserialize(data.clone());
+        assert_eq!(example_exr.serialize(), data);
+    }
+
+    #[test]
+    fn test_re_serializing_ok__03() {
+        let data = read("../../_temp/original_multi-part.exr").unwrap();
         let example_exr = exr::Exr::deserialize(data.clone());
         assert_eq!(example_exr.serialize(), data);
     }
