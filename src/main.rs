@@ -16,3 +16,15 @@ fn main() {
         write("sample_file-rewrite.exr", data).unwrap();
     }
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn test_re_serializing_ok() {
+        let data = read("sample_file.exr").unwrap();
+        let example_exr = exr::Exr::deserialize(data.clone());
+        assert_eq!(example_exr.serialize(), data);
+    }
+}
