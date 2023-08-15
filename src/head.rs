@@ -2,8 +2,6 @@ use crate::funcs;
 use crate::versionfield;
 use crate::prelude::*;
 
-type AttrMap = HashMap<(usize, String), (String, u32, Vec<u8>)>;
-
 pub struct Header {
     parting: versionfield::Parting,
     /// attributes are broken down to parts
@@ -22,7 +20,7 @@ impl Header {
         'partsloop: loop {
             let mut part_attrs: HashMap<String, (String, u32, Vec<u8>)> = HashMap::new();
             let mut part_attr_order = Vec::new();
-            'attrsloop: loop {
+            loop {
                 let attrname = String::from_utf8(
                     funcs::get_bytes_until_null(data)
                 ).unwrap();
