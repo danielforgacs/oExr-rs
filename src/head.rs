@@ -52,11 +52,14 @@ impl Header {
                     }
                     if data[0] == 0 {
                         part_index += 1;
+                        // removing the separator null between headers.
                         data.drain(..1);
                     }
                 },
             };
         }
+        // removing the null at the end of the header(s)
+        data.drain(..1);
         Self {
             attrs,
             leftover_bytes: data.drain(..).collect::<Vec<u8>>(),
