@@ -40,13 +40,13 @@ impl Exr {
 
     pub fn serialize(&self) -> Vec<u8> {
         let mut data = MAGIC_NUMBER_U32.to_le_bytes().to_vec();
-        data.extend(self.serialize_versiont_field());
+        data.extend(self.serialize_version_field());
         data.extend(self.header.serialize());
         data.extend(self.left_over_bytes.clone());
         data
     }
 
-    fn serialize_versiont_field(&self) -> [u8; 4] {
+    fn serialize_version_field(&self) -> [u8; 4] {
         let version_field = self.format_version | u32::from(self.multipart_bit.clone());
         version_field.to_le_bytes()
     }
