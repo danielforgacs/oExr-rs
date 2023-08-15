@@ -94,6 +94,7 @@ impl Header {
     pub fn serialize(&self) -> Vec<u8> {
         let mut data: Vec<u8> = Vec::new();
         data.extend(self.serialize_attrs());
+        dbg!(&data.len());
         data.extend(self.leftover_bytes.clone());
         data
     }
