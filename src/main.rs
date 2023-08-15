@@ -8,18 +8,9 @@ use prelude::*;
 
 
 fn main() {
-    {
-        let data = read("sample_file.exr").unwrap();
-        let fullexr = exr::Exr::deserialize(data.clone());
-        fullexr.serialize();
-    }
-    {
-        let data = read("../../_temp/original.exr").unwrap();
-        let fullexr = exr::Exr::deserialize(data.clone());
-        fullexr.serialize();
-    }
-    {
-        let data = read("../../_temp/original_multi-part.exr").unwrap();
+    for exr_file in ["sample_file.exr", "../../_temp/original.exr", "../../_temp/original_multi-part.exr"] {
+        println!("\n:: exr file: {}", exr_file);
+        let data = read(exr_file).unwrap();
         let fullexr = exr::Exr::deserialize(data.clone());
         fullexr.serialize();
     }
