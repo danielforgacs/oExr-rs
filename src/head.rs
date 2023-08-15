@@ -2,16 +2,18 @@ use crate::funcs;
 use crate::versionfield;
 use crate::prelude::*;
 
+type AttrMap = HashMap<(usize, String), (String, u32, Vec<u8>)>;
+
 pub struct Header {
     parting: versionfield::Parting,
-    attrs: HashMap<String, (String, u32, Vec<u8>)>,
-    attr_order: Vec<String>,
+    attrs: AttrMap,
+    attr_order: Vec<(usize, String)>,
     leftover_bytes: Vec<u8>,
 }
 
 impl Header {
     pub fn deserialize(data: &mut Vec<u8>, parting: &versionfield::Parting) -> Self {
-        let mut attrs: HashMap<String, (String, u32, Vec<u8>)> = HashMap::new();
+        let mut attrs: AttrMap = HashMap::new();
         let mut attr_order = Vec::new();
         // multi part headers have some attrs once for every header.
         // this is the index that's added to the header name in th hashmap.
@@ -20,27 +22,15 @@ impl Header {
             let attrname = String::from_utf8(
                 funcs::get_bytes_until_null(data)
             ).unwrap();
-            let attrname = match parting {
-                versionfield::Parting::Singlepart => attrname,
-                versionfield::Parting::Multipart => {
-                    let mut attrname = attrname;
-                    // index postfix for the header list in multi-part exrs.
-                    attrname.push('#');
-                    attrname += format!("{}", part_index).as_ref();
-                    attrname
-                },
-
-            };
             data.drain(..1);
             let attrtype = String::from_utf8(
                 funcs::get_bytes_until_null(data)
             ).unwrap();
             data.drain(..1);
             let attrlen = funcs::get_sized_int_4bytes(data);
-            println!(":: found attr: {}, type: {}, lenght: {}", attrname, attrtype, attrlen);
             let attr_bytes = data.drain(..attrlen as usize).collect::<Vec<u8>>();
-            attr_order.push(attrname.clone());
-            attrs.insert(attrname, (attrtype, attrlen, attr_bytes));
+            attr_order.push((part_index, attrname.clone()));
+            attrs.insert((part_index, attrname), (attrtype, attrlen, attr_bytes));
             // single part header ends with a null
             // multi part headers end with a null and the headers
             // endwith an empty header - so there's a double 0
@@ -77,19 +67,14 @@ impl Header {
         println!("\n::serializing attribs.");
         let mut data = Vec::new();
         let mut previous_part_index = 0;
-        for name in &self.attr_order {
-            let (attrtype, attrlen, attrdata) = self.attrs.get(name).unwrap();
+        for (part_idx, name) in &self.attr_order {
+            println!("part index: {}", part_idx);
+            let (attrtype, attrlen, attrdata) = self.attrs.get(&(*part_idx, name.to_string())).unwrap();
             let attrname = match self.parting {
                 versionfield::Parting::Singlepart => name,
                 versionfield::Parting::Multipart => {
-                    // This part gets the name and the part index
-                    // from the name. If the index changes adding
-                    // an extra null to separate parts.
-                    let name = name.split('#').nth(0).unwrap();
-                    let name_idx = name.split('#').nth(1).unwrap();
-                    let name_idx = name_idx.to_string().parse::<usize>().unwrap();
-                    if name_idx != previous_part_index {
-                        previous_part_index = name_idx;
+                    if *part_idx != previous_part_index {
+                        previous_part_index = *part_idx;
                         data.push(0);
                     }
                     name
@@ -103,10 +88,6 @@ impl Header {
             data.extend(attrdata);
         }
         data.push(0);
-        match self.parting {
-            versionfield::Parting::Singlepart => (),
-            versionfield::Parting::Multipart => data.push(0),
-        }
         data
     }
 
