@@ -3,6 +3,7 @@ use crate::versionfield;
 use crate::prelude::*;
 
 pub struct Header {
+    parting: versionfield::Parting,
     attrs: HashMap<String, (String, u32, Vec<u8>)>,
     leftover_bytes: Vec<u8>,
 }
@@ -61,13 +62,37 @@ impl Header {
         // removing the null at the end of the header(s)
         data.drain(..1);
         Self {
+            parting: parting.clone(),
             attrs,
             leftover_bytes: data.drain(..).collect::<Vec<u8>>(),
         }
     }
 
+    fn serialize_attrs(&self) -> Vec<u8> {
+        println!("\n::serializing attribs.");
+        let mut data = Vec::new();
+        for (name, (attrtype, attrlen, attrdata)) in self.attrs.iter() {
+            let attrname = match self.parting {
+                versionfield::Parting::Singlepart => name,
+                versionfield::Parting::Multipart => name.split('#').nth(0).unwrap(),
+            };
+            println!(":: attr: {}, type: {}, lenght: {}", attrname, attrtype, attrlen);
+            data.extend(attrname.bytes());
+            data.extend(attrtype.bytes());
+            data.extend(attrlen.to_le_bytes());
+            data.extend(attrdata);
+            data.push(0);
+        }
+        match self.parting {
+            versionfield::Parting::Singlepart => (),
+            versionfield::Parting::Multipart => data.push(0),
+        }
+        data
+    }
+
     pub fn serialize(&self) -> Vec<u8> {
         let mut data: Vec<u8> = Vec::new();
+        data.extend(self.serialize_attrs());
         data.extend(self.leftover_bytes.clone());
         data
     }
