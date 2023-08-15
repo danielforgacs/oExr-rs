@@ -4,9 +4,9 @@ use crate::funcs;
 const MAGIC_NUMBER_U32: u32 = 20000630;
 
 pub struct Exr {
-    left_over_bytes: Vec<u8>,
-    format_version_number: u32,
+    format_version: u32,
     multipart_bit: Parting,
+    left_over_bytes: Vec<u8>,
 }
 
 #[derive(Clone, Debug)]
@@ -54,14 +54,14 @@ impl Exr {
         let multipart_bit = Parting::from(version_field);
         Self {
             left_over_bytes: data,
-            format_version_number,
+            format_version: format_version_number,
             multipart_bit,
         }
     }
 
     pub fn serialize(&self) -> Vec<u8> {
         let mut data = MAGIC_NUMBER_U32.to_le_bytes().to_vec();
-        let version_field = self.format_version_number | u32::from(self.multipart_bit.clone());
+        let version_field = self.format_version | u32::from(self.multipart_bit.clone());
         data.extend(version_field.to_le_bytes());
         data.extend(self.left_over_bytes.clone());
         data
