@@ -84,7 +84,9 @@ impl Header {
             };
             println!(":: attr: {}, type: {}, lenght: {}", attrname, attrtype, attrlen);
             data.extend(attrname.bytes());
+            data.push(0);
             data.extend(attrtype.bytes());
+            data.push(0);
             data.extend(attrlen.to_le_bytes());
             data.extend(attrdata);
         }
