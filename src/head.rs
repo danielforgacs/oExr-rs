@@ -1,12 +1,13 @@
 use crate::funcs;
 use crate::versionfield;
+use crate::attrib;
 use crate::prelude::*;
 
 pub struct Header {
     parting: versionfield::Parting,
     /// attributes are broken down to parts
     /// single part files only have one part.
-    parts: Vec<HashMap<String, (String, u32, Vec<u8>)>>,
+    parts: Vec<HashMap<String, attrib::Attribute>>,
     /// attrs are stored in hashmaps. The order might
     /// be important to exr.
     attr_order: Vec<Vec<String>>,
@@ -15,10 +16,22 @@ pub struct Header {
 
 impl Header {
     pub fn deserialize(data: &mut Vec<u8>, parting: &versionfield::Parting) -> Self {
+        //! this func takes care of findinf the pieces of data in the header.
+        //! a part header is a series of attributes. An attribute is
+        //! a series of fields. the rules are:
+        //!
+        //! ````
+        //! attrib name: text
+        //! null byte
+        //! attrib type: text
+        //! null byte
+        //! value length: 4 bytes little endian u32
+        //! value
+        //! ````
         let mut parts = Vec::new();
         let mut attr_order = Vec::new();
         'partsloop: loop {
-            let mut part_attrs: HashMap<String, (String, u32, Vec<u8>)> = HashMap::new();
+            let mut part_attrs: HashMap<String, attrib::Attribute> = HashMap::new();
             let mut part_attr_order = Vec::new();
             loop {
                 let attrname = String::from_utf8(
@@ -32,7 +45,8 @@ impl Header {
                 let attrlen = funcs::get_sized_int_4bytes(data);
                 let attr_bytes = data.drain(..attrlen as usize).collect::<Vec<u8>>();
                 println!(":: attr name: {}, type: {}, len: {}", &attrname, &attrtype, attrlen);
-                part_attrs.insert(attrname.clone(), (attrtype, attrlen, attr_bytes));
+                let attr = attrib::Attribute::new(attrname.clone(), attrtype, attrlen, attr_bytes);
+                part_attrs.insert(attrname.clone(), attr);
                 part_attr_order.push(attrname);
                 if data[0] == 0 {
                     data.drain(..1);
@@ -64,13 +78,14 @@ impl Header {
         let mut data = Vec::new();
         for (part_idx, part) in self.parts.iter().enumerate() {
             for attrname in &self.attr_order[part_idx] {
-                let (attrtype, attrlen, attrdata) = part.get(attrname).unwrap();
-                data.extend(attrname.bytes());
-                data.push(0);
-                data.extend(attrtype.bytes());
-                data.push(0);
-                data.extend(attrlen.to_le_bytes());
-                data.extend(attrdata);
+                let attr = part.get(attrname).unwrap();
+                data.extend(attr.deserialize());
+                // data.extend(attrname.bytes());
+                // data.push(0);
+                // data.extend(attrtype.bytes());
+                // data.push(0);
+                // data.extend(attrlen.to_le_bytes());
+                // data.extend(attrdata);
             }
             data.push(0);
         }
