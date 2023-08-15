@@ -81,23 +81,20 @@ impl Header {
             let (attrtype, attrlen, attrdata) = self.attrs.get(name).unwrap();
             let attrname = match self.parting {
                 versionfield::Parting::Singlepart => name,
-                versionfield::Parting::Multipart => name.split('#').nth(0).unwrap(),
-            };
-            println!(":: attr: {}, type: {}, lenght: {}", attrname, attrtype, attrlen);
-            let part_idx = match self.parting {
-                versionfield::Parting::Singlepart => 0,
                 versionfield::Parting::Multipart => {
+                    // This part gets the name and the part index
+                    // from the name. If the index changes adding
+                    // an extra null to separate parts.
+                    let name = name.split('#').nth(0).unwrap();
                     let name_idx = name.split('#').nth(1).unwrap();
                     let name_idx = name_idx.to_string().parse::<usize>().unwrap();
-                    name_idx
+                    if name_idx != previous_part_index {
+                        previous_part_index = name_idx;
+                        data.push(0);
+                    }
+                    name
                 },
             };
-            println!("previous: {}, current: {}", previous_part_index, part_idx);
-            if part_idx != previous_part_index {
-                print!("SWITCH PART");
-                previous_part_index = part_idx;
-                data.push(0);
-            }
             data.extend(attrname.bytes());
             data.push(0);
             data.extend(attrtype.bytes());
