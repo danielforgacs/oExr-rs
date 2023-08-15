@@ -29,7 +29,7 @@ impl Exr {
             panic!("The magic number is wrong!");
         }
         let (format_version, multipart_bit) = versionfield::deserialize_version_field(&mut data);
-        let header = head::Header::deserialize(&mut data);
+        let header = head::Header::deserialize(&mut data, &multipart_bit);
         Self {
             format_version,
             multipart_bit,
