@@ -76,6 +76,7 @@ impl Header {
     fn serialize_attrs(&self) -> Vec<u8> {
         println!("\n::serializing attribs.");
         let mut data = Vec::new();
+        let mut previous_part_index = 0;
         for name in &self.attr_order {
             let (attrtype, attrlen, attrdata) = self.attrs.get(name).unwrap();
             let attrname = match self.parting {
@@ -83,6 +84,20 @@ impl Header {
                 versionfield::Parting::Multipart => name.split('#').nth(0).unwrap(),
             };
             println!(":: attr: {}, type: {}, lenght: {}", attrname, attrtype, attrlen);
+            let part_idx = match self.parting {
+                versionfield::Parting::Singlepart => 0,
+                versionfield::Parting::Multipart => {
+                    let name_idx = name.split('#').nth(1).unwrap();
+                    let name_idx = name_idx.to_string().parse::<usize>().unwrap();
+                    name_idx
+                },
+            };
+            println!("previous: {}, current: {}", previous_part_index, part_idx);
+            if part_idx != previous_part_index {
+                print!("SWITCH PART");
+                previous_part_index = part_idx;
+                data.push(0);
+            }
             data.extend(attrname.bytes());
             data.push(0);
             data.extend(attrtype.bytes());
