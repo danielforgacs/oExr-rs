@@ -1,20 +1,22 @@
 mod exr;
 mod funcs;
 mod prelude {
-    pub use std::fs::{write, read};
     pub use std::collections::HashMap;
+    pub use std::fs::{read, write};
 }
 use prelude::*;
 
-
 fn main() {
-    for exr_file in ["sample_file.exr", "../../_temp/original.exr", "../../_temp/original_multi-part.exr"] {
+    for exr_file in [
+        "sample_file.exr",
+        "../../_temp/original.exr",
+        "../../_temp/original_multi-part.exr",
+    ] {
         println!("\n:: exr file: {}", exr_file);
         let data = read(exr_file).unwrap();
         let fullexr = exr::Exr::deserialize(data.clone());
         fullexr.serialize();
     }
-
 }
 
 #[cfg(test)]

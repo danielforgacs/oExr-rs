@@ -33,7 +33,6 @@ impl From<Parting> for u32 {
             Parting::Singlepart => 0 << 12,
             Parting::Multipart => 1 << 12,
         }
-
     }
 }
 
@@ -45,10 +44,10 @@ impl Exr {
         }
         let version_field = u32::from_le_bytes(
             data.drain(..4)
-            .collect::<Vec<u8>>()
-            .to_owned()
-            .try_into()
-            .unwrap()
+                .collect::<Vec<u8>>()
+                .to_owned()
+                .try_into()
+                .unwrap(),
         );
         let format_version_number = version_field & 0b_00000000_00000000_00000000_11111111;
         println!(":: format version number: {}", format_version_number);
