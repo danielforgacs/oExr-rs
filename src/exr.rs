@@ -1,6 +1,6 @@
 use crate::funcs;
 use crate::versionfield;
-use crate::header;
+use crate::head;
 
 // exr magin number bytes: 0x76, 0x2f, 0x31, 0x01
 const MAGIC_NUMBER_U32: u32 = 20000630;
@@ -8,7 +8,7 @@ const MAGIC_NUMBER_U32: u32 = 20000630;
 pub struct Exr {
     format_version: u32,
     multipart_bit: versionfield::Parting,
-    header: header::Header,
+    header: head::Header,
     left_over_bytes: Vec<u8>,
 }
 
@@ -19,7 +19,7 @@ impl Exr {
             panic!("The magic number is wrong!");
         }
         let (format_version, multipart_bit) = versionfield::deserialize_version_field(&mut data);
-        let header = header::Header::deserialize(&mut data);
+        let header = head::Header::deserialize(&mut data);
         Self {
             format_version,
             multipart_bit,

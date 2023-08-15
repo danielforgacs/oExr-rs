@@ -1,7 +1,7 @@
 mod exr;
 mod funcs;
 mod versionfield;
-mod header;
+mod head;
 mod prelude {
     pub use std::collections::HashMap;
     pub use std::fs::{read, write};
