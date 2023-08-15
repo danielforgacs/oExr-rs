@@ -2,11 +2,21 @@ use crate::funcs;
 use crate::versionfield;
 use crate::head;
 
-// exr magin number bytes: 0x76, 0x2f, 0x31, 0x01
+/// exr magix number bytes: 0x76, 0x2f, 0x31, 0x01
 const MAGIC_NUMBER_U32: u32 = 20000630;
 
+/// The root level of exr data. File layout:
+///
+/// <https://openexr.com/en/latest/OpenEXRFileLayout.html#high-level-layout>
+///
+/// The `format version` and `parting` fields come from the version field.
+/// The version field is the signed 4 bytes int after the magic number.
+///
+/// <https://openexr.com/en/latest/OpenEXRFileLayout.html#version-field>
 pub struct Exr {
+    /// version field least significant 8 bits.
     format_version: u32,
+    /// version field bit 9
     multipart_bit: versionfield::Parting,
     header: head::Header,
     left_over_bytes: Vec<u8>,
