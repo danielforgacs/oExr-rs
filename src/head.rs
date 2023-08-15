@@ -24,6 +24,7 @@ impl Header {
                 versionfield::Parting::Singlepart => attrname,
                 versionfield::Parting::Multipart => {
                     let mut attrname = attrname;
+                    // index postfix for the header list in multi-part exrs.
                     attrname.push('#');
                     attrname += format!("{}", part_index).as_ref();
                     attrname
