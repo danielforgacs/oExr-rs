@@ -2,11 +2,6 @@ use crate::funcs;
 use crate::versionfield;
 use crate::prelude::*;
 
-pub enum HeaderType {
-    Single(Header),
-    Multi(Vec<Header>),
-}
-
 pub struct Header {
     attrs: HashMap<String, (String, u32, Vec<u8>)>,
     leftover_bytes: Vec<u8>,
