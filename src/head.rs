@@ -30,6 +30,7 @@ impl Header {
         //! ````
         let mut parts = Vec::new();
         let mut attr_order = Vec::new();
+        print!(":: header attributes: [");
         'partsloop: loop {
             let mut part_attrs: HashMap<String, attrib::Attribute> = HashMap::new();
             let mut part_attr_order = Vec::new();
@@ -44,8 +45,8 @@ impl Header {
                 data.drain(..1);
                 let attrlen = funcs::get_sized_int_4bytes(data);
                 let attr_bytes = data.drain(..attrlen as usize).collect::<Vec<u8>>();
-                println!(":: attr name: {}, type: {}, len: {}", &attrname, &attrtype, attrlen);
                 let attr = attrib::Attribute::new(attrname.clone(), attrtype, attrlen, attr_bytes);
+                print!("{}, ", &attrname);
                 part_attrs.insert(attrname.clone(), attr);
                 part_attr_order.push(attrname);
                 if data[0] == 0 {
@@ -65,6 +66,7 @@ impl Header {
                 },
             }
         };
+        println!("]");
         Self {
             parting: parting.clone(),
             parts,
@@ -74,18 +76,11 @@ impl Header {
     }
 
     fn serialize_attrs(&self) -> Vec<u8> {
-        println!("\n::serializing attribs.");
         let mut data = Vec::new();
         for (part_idx, part) in self.parts.iter().enumerate() {
             for attrname in &self.attr_order[part_idx] {
                 let attr = part.get(attrname).unwrap();
                 data.extend(attr.deserialize());
-                // data.extend(attrname.bytes());
-                // data.push(0);
-                // data.extend(attrtype.bytes());
-                // data.push(0);
-                // data.extend(attrlen.to_le_bytes());
-                // data.extend(attrdata);
             }
             data.push(0);
         }
@@ -98,7 +93,6 @@ impl Header {
     pub fn serialize(&self) -> Vec<u8> {
         let mut data: Vec<u8> = Vec::new();
         data.extend(self.serialize_attrs());
-        dbg!(&data.len());
         data.extend(self.leftover_bytes.clone());
         data
     }

@@ -17,7 +17,7 @@ fn main() {
         "../../_temp/original_metalong.exr",
         "../../_temp/original_multi-part.exr",
     ] {
-        println!("\n:: exr file: {}", exr_file);
+        println!(":: exr file: {}", exr_file);
         let data = read(exr_file).unwrap();
         let fullexr = exr::Exr::from_bytes(data.clone());
         fullexr.serialize();
