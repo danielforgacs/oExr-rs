@@ -1,6 +1,7 @@
 use crate::funcs;
 use crate::vfield;
 use crate::attrib;
+use crate::datawin;
 use crate::prelude::*;
 
 pub struct Header {
@@ -11,6 +12,7 @@ pub struct Header {
     /// attrs are stored in hashmaps. The order might
     /// be important to exr.
     attr_order: Vec<Vec<String>>,
+    data_window: Vec<datawin::DataWin>,
 }
 
 impl Header {
@@ -29,6 +31,7 @@ impl Header {
         //! ````
         let mut parts = Vec::new();
         let mut attr_order = Vec::new();
+        let mut data_window = Vec::new();
         print!(":: header attributes: [");
         'partsloop: loop {
             let mut part_attrs: HashMap<String, attrib::Attribute> = HashMap::new();
@@ -44,10 +47,16 @@ impl Header {
                 data.drain(..1);
                 let attrlen = funcs::get_sized_int_4bytes(data);
                 let attr_bytes = data.drain(..attrlen as usize).collect::<Vec<u8>>();
-                let attr = attrib::Attribute::new(attrname.clone(), attrtype, attrlen, attr_bytes);
+                if attrname == "dataWindow" {
+                    let data_win = datawin::DataWin::from(attr_bytes);
+                    data_window.push(data_win);
+                    part_attr_order.push(attrname.clone());
+                } else {
+                    let attr = attrib::Attribute::new(attrname.clone(), attrtype, attrlen, attr_bytes);
+                    part_attrs.insert(attrname.clone(), attr);
+                    part_attr_order.push(attrname.clone());
+                };
                 print!("{}, ", &attrname);
-                part_attrs.insert(attrname.clone(), attr);
-                part_attr_order.push(attrname);
                 if data[0] == 0 {
                     data.drain(..1);
                     break;
@@ -70,6 +79,7 @@ impl Header {
             parting: parting.clone(),
             parts,
             attr_order,
+            data_window,
         }
     }
 
@@ -77,8 +87,13 @@ impl Header {
         let mut data = Vec::new();
         for (part_idx, part) in self.parts.iter().enumerate() {
             for attrname in &self.attr_order[part_idx] {
-                let attr = part.get(attrname).unwrap();
-                data.extend(attr.deserialize());
+                if attrname == "dataWindow" {
+                    let data_win = &self.data_window[part_idx];
+                    data.extend(data_win.serialize());
+                } else {
+                    let attr = part.get(attrname).unwrap();
+                    data.extend(attr.deserialize());
+                }
             }
             data.push(0);
         }

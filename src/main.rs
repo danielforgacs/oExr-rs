@@ -3,6 +3,7 @@ mod funcs;
 mod vfield;
 mod head;
 mod attrib;
+mod datawin;
 mod prelude {
     pub use std::collections::HashMap;
     pub use std::fs::{read, write};
@@ -20,7 +21,8 @@ fn main() {
         println!(":: exr file: {}", exr_file);
         let data = read(exr_file).unwrap();
         let fullexr = exr::Exr::from_bytes(data.clone());
-        fullexr.serialize();
+        let data = fullexr.serialize();
+        let _result = write("debug.exr", data);
     }
 }
 
