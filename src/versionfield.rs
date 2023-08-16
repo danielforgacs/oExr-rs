@@ -38,3 +38,8 @@ pub fn deserialize_version_field(data: &mut Vec<u8>) -> (u32, Parting) {
     let multipart_bit = Parting::from(version_field);
     (format_version, multipart_bit)
 }
+
+pub fn serialize_version_field(version: u32, multipart_bit: Parting) -> [u8; 4] {
+    let version_field = version | u32::from(multipart_bit);
+    version_field.to_le_bytes()
+}
