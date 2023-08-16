@@ -1,10 +1,10 @@
 use crate::funcs;
-use crate::versionfield;
+use crate::vfield;
 use crate::attrib;
 use crate::prelude::*;
 
 pub struct Header {
-    parting: versionfield::Parting,
+    parting: vfield::Parting,
     /// attributes are broken down to parts
     /// single part files only have one part.
     parts: Vec<HashMap<String, attrib::Attribute>>,
@@ -14,7 +14,7 @@ pub struct Header {
 }
 
 impl Header {
-    pub fn deserialize(data: &mut Vec<u8>, parting: &versionfield::Parting) -> Self {
+    pub fn deserialize(data: &mut Vec<u8>, parting: &vfield::Parting) -> Self {
         //! this func takes care of findinf the pieces of data in the header.
         //! a part header is a series of attributes. An attribute is
         //! a series of fields. the rules are:
@@ -56,8 +56,8 @@ impl Header {
             parts.push(part_attrs);
             attr_order.push(part_attr_order);
             match *parting {
-                versionfield::Parting::Singlepart => break 'partsloop,
-                versionfield::Parting::Multipart => {
+                vfield::Parting::Singlepart => break 'partsloop,
+                vfield::Parting::Multipart => {
                     if data[0] == 0 {
                         data.drain(..1);
                         break 'partsloop;
@@ -82,7 +82,7 @@ impl Header {
             }
             data.push(0);
         }
-        if self.parting == versionfield::Parting::Multipart {
+        if self.parting == vfield::Parting::Multipart {
             data.push(0);
         }
         data

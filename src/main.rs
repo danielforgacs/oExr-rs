@@ -1,6 +1,6 @@
 mod exr;
 mod funcs;
-mod versionfield;
+mod vfield;
 mod head;
 mod attrib;
 mod prelude {

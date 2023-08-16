@@ -1,5 +1,5 @@
 use crate::funcs;
-use crate::versionfield;
+use crate::vfield;
 use crate::head;
 
 /// exr magix number bytes: 0x76, 0x2f, 0x31, 0x01
@@ -17,7 +17,7 @@ pub struct Exr {
     /// version field least significant 8 bits.
     format_version: u32,
     /// version field bit 9
-    multipart_bit: versionfield::Parting,
+    multipart_bit: vfield::Parting,
     header: head::Header,
     left_over_bytes: Vec<u8>,
 }
@@ -28,7 +28,7 @@ impl Exr {
         if magic_num != MAGIC_NUMBER_U32 {
             panic!("The magic number is wrong!");
         }
-        let (format_version, multipart_bit) = versionfield::deserialize_version_field(&mut data);
+        let (format_version, multipart_bit) = vfield::deserialize_version_field(&mut data);
         let header = head::Header::deserialize(&mut data, &multipart_bit);
         Self {
             format_version,
@@ -40,7 +40,7 @@ impl Exr {
 
     pub fn serialize(&self) -> Vec<u8> {
         let mut data = MAGIC_NUMBER_U32.to_le_bytes().to_vec();
-        data.extend(versionfield::serialize_version_field(self.format_version, self.multipart_bit.clone()));
+        data.extend(vfield::serialize_version_field(self.format_version, self.multipart_bit.clone()));
         data.extend(self.header.serialize());
         data.extend(self.left_over_bytes.clone());
         data
