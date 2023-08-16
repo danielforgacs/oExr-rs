@@ -1,3 +1,31 @@
+/*
+Header Attributes (All Files)
+    channels                chlist
+    compression             compression
+    dataWindow              box2i
+    displayWindow           box2i
+    lineOrder               lineOrder
+    pixelAspectRatio        float
+    screenWindowCenter      v2f
+    screenWindowWidth       float
+Tile Header Attribute
+    tiles                   tiledesc
+Multi-View Header Attribute
+    view                    text
+Multi-Part and Deep Data Header Attributes
+    name                    string
+    type                    string
+    version                 int
+    chunkCount              int
+    tiles                   tileDesc
+Deep Data Header Attributes
+    tiles                   tileDesc
+    maxSamplesPerPixel      int
+    version                 int
+    type                    string
+*/
+
+
 pub struct Attribute {
     name: String,
     attrtype: String,
