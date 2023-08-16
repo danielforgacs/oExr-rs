@@ -23,6 +23,7 @@ fn main() {
         let fullexr = exr::Exr::from_bytes(data.clone());
         let data = fullexr.serialize();
         let _result = write("debug.exr", data);
+        println!();
     }
 }
 

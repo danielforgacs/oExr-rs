@@ -75,6 +75,17 @@ impl Header {
             }
         };
         println!("]");
+        for item in &data_window {
+            println!(
+                ":: data window: {}x{}, {}x{} => res: {} x {}",
+                item.x_min(),
+                item.y_min(),
+                item.x_max(),
+                item.y_max(),
+                item.get_res_x(),
+                item.get_res_y()
+            );
+        };
         Self {
             parting: parting.clone(),
             parts,

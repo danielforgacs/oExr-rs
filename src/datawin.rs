@@ -28,6 +28,19 @@ impl DataWin {
         data.extend(self.y_max.to_le_bytes());
         data
     }
+
+    pub fn x_min(&self) -> u32 { self.x_min }
+    pub fn y_min(&self) -> u32 { self.y_min }
+    pub fn x_max(&self) -> u32 { self.x_max }
+    pub fn y_max(&self) -> u32 { self.y_max }
+
+    pub fn get_res_x(&self) -> u32 {
+            self.x_max - self.x_min + 1
+    }
+
+    pub fn get_res_y(&self) -> u32 {
+            self.y_max - self.y_min + 1
+    }
 }
 
 
