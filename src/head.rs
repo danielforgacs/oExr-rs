@@ -113,4 +113,7 @@ impl Header {
         }
         data
     }
+
+    pub fn get_res_x(&self) -> u32 { self.data_window[0].get_res_x() }
+    pub fn get_res_y(&self) -> u32 { self.data_window[0].get_res_y() }
 }
