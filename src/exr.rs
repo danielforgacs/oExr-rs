@@ -23,7 +23,7 @@ pub struct Exr {
 }
 
 impl Exr {
-    pub fn deserialize(mut data: Vec<u8>) -> Exr {
+    pub fn from_bytes(mut data: Vec<u8>) -> Exr {
         let magic_num = funcs::get_sized_int_4bytes(&mut data);
         if magic_num != MAGIC_NUMBER_U32 {
             panic!("The magic number is wrong!");
