@@ -11,7 +11,6 @@ pub struct Header {
     /// attrs are stored in hashmaps. The order might
     /// be important to exr.
     attr_order: Vec<Vec<String>>,
-    leftover_bytes: Vec<u8>,
 }
 
 impl Header {
@@ -71,11 +70,10 @@ impl Header {
             parting: parting.clone(),
             parts,
             attr_order,
-            leftover_bytes: data.drain(..).collect::<Vec<u8>>(),
         }
     }
 
-    fn serialize_attrs(&self) -> Vec<u8> {
+    pub fn serialize(&self) -> Vec<u8> {
         let mut data = Vec::new();
         for (part_idx, part) in self.parts.iter().enumerate() {
             for attrname in &self.attr_order[part_idx] {
@@ -87,13 +85,6 @@ impl Header {
         if self.parting == versionfield::Parting::Multipart {
             data.push(0);
         }
-        data
-    }
-
-    pub fn serialize(&self) -> Vec<u8> {
-        let mut data: Vec<u8> = Vec::new();
-        data.extend(self.serialize_attrs());
-        data.extend(self.leftover_bytes.clone());
         data
     }
 }
