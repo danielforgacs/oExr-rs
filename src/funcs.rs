@@ -4,6 +4,12 @@ pub fn get_sized_int_4bytes(data: &mut Vec<u8>) -> u32 {
     u32::from_le_bytes(int_data)
 }
 
+pub fn get_unsigned_long_int_8bytes(data: &mut Vec<u8>) -> u64 {
+    let int_data = data.drain(..8).collect::<Vec<u8>>();
+    let int_data: [u8; 8] = int_data.try_into().unwrap();
+    u64::from_le_bytes(int_data)
+}
+
 pub fn get_bytes_until_null(data: &mut Vec<u8>) -> Vec<u8> {
     let mut result = Vec::new();
     while data[0] != 0 {

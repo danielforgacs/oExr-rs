@@ -24,12 +24,36 @@ pub struct Exr {
 
 impl Exr {
     pub fn from_bytes(mut data: Vec<u8>) -> Exr {
+            let mut used_byte_count = 0;
+            let mut previous_byte_count = data.len();
+            println!("--> bytes: {}", used_byte_count);
         let magic_num = funcs::get_sized_int_4bytes(&mut data);
         if magic_num != MAGIC_NUMBER_U32 {
             panic!("The magic number is wrong!");
         }
+            used_byte_count += previous_byte_count - data.len();
+            previous_byte_count = data.len();
+            println!("--> bytes: {} - after magic", used_byte_count);
         let (format_version, multipart_bit) = vfield::deserialize_version_field(&mut data);
+            used_byte_count += previous_byte_count - data.len();
+            previous_byte_count = data.len();
+            println!("--> bytes: {} - after v field", used_byte_count);
         let header = head::Header::deserialize(&mut data, &multipart_bit);
+            used_byte_count += previous_byte_count - data.len();
+            previous_byte_count = data.len();
+            println!("--> bytes: {} - after v field", used_byte_count);
+
+        let header_byte_count = 4 + 4 + header.serialize().len();
+        println!("++ header byte count: {}", header_byte_count);
+
+        // let first_offset_value = funcs::get_unsigned_long_int_8bytes(&mut data);
+        // println!("++ first offset value: {}", first_offset_value);
+
+        let offset_count = header.get_res_y();
+        println!("++ offset count (res y): {}", offset_count);
+
+        let all_offset_bytes = offset_count * 8;
+        println!("++ offset all_offset_bytes: {}", all_offset_bytes);
         Self {
             format_version,
             multipart_bit,
