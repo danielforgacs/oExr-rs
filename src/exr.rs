@@ -24,6 +24,7 @@ pub struct Exr {
 
 impl Exr {
     pub fn from_bytes(mut data: Vec<u8>) -> Exr {
+            println!("= initial data byte count: {}", data.len());
             let mut used_byte_count = 0;
             let mut previous_byte_count = data.len();
             println!("--> bytes: {}", used_byte_count);
@@ -43,7 +44,7 @@ impl Exr {
             previous_byte_count = data.len();
             println!("--> bytes: {} - after v field", used_byte_count);
 
-        let header_byte_count = 4 + 4 + header.serialize().len();
+        let header_byte_count = 4 + 4 + header.serialize().len() as u32;
         println!("++ header byte count: {}", header_byte_count);
 
         // let first_offset_value = funcs::get_unsigned_long_int_8bytes(&mut data);
@@ -54,6 +55,15 @@ impl Exr {
 
         let all_offset_bytes = offset_count * 8;
         println!("++ offset all_offset_bytes: {}", all_offset_bytes);
+
+        // let offset_bytes = data.drain(..all_offset_bytes as usize);
+        // let offset_bytes = data.drain(..5);
+        let offset_bytes: Vec<u8> = data.drain(..all_offset_bytes as usize).collect();
+        // data.drain(..5);
+
+        // let data_len = data.len();
+
+        print!("@ data left: {}, total: {}", &data.len(), header_byte_count + all_offset_bytes + data.len() as u32);
         Self {
             format_version,
             multipart_bit,
