@@ -61,6 +61,11 @@ impl Exr {
         let offset_bytes: Vec<u8> = data.drain(..all_offset_bytes as usize).collect();
         // data.drain(..5);
 
+        let offset_bytes: Vec<u8> = Vec::new();
+        for offset_byte in 0..header.get_res_y() {
+
+        }
+
         // let data_len = data.len();
 
         print!("@ data left: {}, total: {}", &data.len(), header_byte_count + all_offset_bytes + data.len() as u32);
