@@ -33,6 +33,10 @@ impl DataWin {
         data.extend(self.y_max.to_le_bytes());
         data
     }
+
+    pub fn get_res_y(&self) -> u32 {
+        self.y_max - self.y_min
+    }
 }
 
 #[cfg(test)]

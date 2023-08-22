@@ -13,10 +13,10 @@ use prelude::*;
 fn main() {
     for exr_file in [
         "sample_file.exr",
-        "../../_temp/original.exr",
-        "../../_temp/original_manymeta.exr",
-        "../../_temp/original_metalong.exr",
-        "../../_temp/original_multi-part.exr",
+        // "../../_temp/original.exr",
+        // "../../_temp/original_manymeta.exr",
+        // "../../_temp/original_metalong.exr",
+        // "../../_temp/original_multi-part.exr",
     ] {
         println!("-- file: {}", exr_file);
         let data = read(exr_file).unwrap();

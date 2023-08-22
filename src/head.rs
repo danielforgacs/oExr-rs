@@ -96,4 +96,11 @@ impl Header {
         }
         data
     }
+
+    pub fn get_res_y(&self) -> u32 {
+        //
+        // HARDCODED INDEX
+        //
+        self.data_window[0].get_res_y() + 1
+    }
 }

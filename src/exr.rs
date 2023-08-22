@@ -53,7 +53,13 @@ impl Exr {
             self.multipart_bit.clone(),
         ));
         data.extend(self.header.serialize());
-        data.extend(self.left_over_bytes.clone());
+
+        println!("header byte count: {}", data.len());
+        println!("res y: {}", self.header.get_res_y());
+        println!("first offset: {}", data.len() as u32 + (8 * self.header.get_res_y()));
+
+        // calculating offsets.
+        let scanline_count = self.header.get_res_y();
         data
     }
 }
