@@ -32,7 +32,6 @@ impl Header {
         let mut parts = Vec::new();
         let mut attr_order = Vec::new();
         let mut data_window = Vec::new();
-        print!(":: header attributes: [");
         'partsloop: loop {
             let mut part_attrs: HashMap<String, attrib::Attribute> = HashMap::new();
             let mut part_attr_order = Vec::new();
@@ -56,7 +55,6 @@ impl Header {
                     part_attrs.insert(attrname.clone(), attr);
                     part_attr_order.push(attrname.clone());
                 };
-                print!("{}, ", &attrname);
                 if data[0] == 0 {
                     data.drain(..1);
                     break;
@@ -74,7 +72,6 @@ impl Header {
                 },
             }
         };
-        println!("]");
         Self {
             parting: parting.clone(),
             parts,

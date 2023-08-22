@@ -38,6 +38,14 @@ impl Exr {
         }
     }
 
+    pub fn get_format_version(&self) -> u32 {
+        self.format_version
+    }
+
+    pub fn is_multipart(&self) -> bool {
+        self.multipart_bit.clone().into()
+    }
+
     pub fn serialize(&self) -> Vec<u8> {
         let mut data = MAGIC_NUMBER_U32.to_le_bytes().to_vec();
         data.extend(vfield::serialize_version_field(self.format_version, self.multipart_bit.clone()));

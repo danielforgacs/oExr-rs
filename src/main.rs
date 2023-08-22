@@ -18,11 +18,15 @@ fn main() {
         "../../_temp/original_metalong.exr",
         "../../_temp/original_multi-part.exr",
     ] {
-        println!(":: exr file: {}", exr_file);
+        println!("-- file: {}", exr_file);
         let data = read(exr_file).unwrap();
+        println!("   bytes:{:<30}{}", "", data.len());
         let fullexr = exr::Exr::from_bytes(data.clone());
+        println!("   format version:{:<30}{}", "", fullexr.get_format_version());
+        println!("   is multi-part: {}", fullexr.is_multipart());
         let data = fullexr.serialize();
         let _result = write("debug.exr", data);
+        println!();
     }
 }
 
