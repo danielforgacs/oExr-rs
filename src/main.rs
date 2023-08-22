@@ -1,9 +1,9 @@
-mod exr;
-mod funcs;
-mod vfield;
-mod head;
 mod attrib;
 mod datawin;
+mod exr;
+mod funcs;
+mod head;
+mod vfield;
 mod prelude {
     pub use std::collections::HashMap;
     pub use std::fs::{read, write};

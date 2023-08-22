@@ -9,6 +9,6 @@ pub fn get_bytes_until_null(data: &mut Vec<u8>) -> Vec<u8> {
     while data[0] != 0 {
         let current_byte = data.drain(..1).as_slice()[0];
         result.push(current_byte);
-    };
+    }
     result
 }

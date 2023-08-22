@@ -25,7 +25,6 @@ Deep Data Header Attributes
     type                    string
 */
 
-
 pub struct Attribute {
     name: String,
     attrtype: String,
@@ -35,7 +34,12 @@ pub struct Attribute {
 
 impl Attribute {
     pub fn new(name: String, attrtype: String, len: u32, value: Vec<u8>) -> Self {
-        Self { name, attrtype, len, value }
+        Self {
+            name,
+            attrtype,
+            len,
+            value,
+        }
     }
 
     pub fn deserialize(&self) -> Vec<u8> {

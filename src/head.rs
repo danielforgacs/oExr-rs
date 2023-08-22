@@ -1,8 +1,8 @@
-use crate::funcs;
-use crate::vfield;
 use crate::attrib;
 use crate::datawin;
+use crate::funcs;
 use crate::prelude::*;
+use crate::vfield;
 
 pub struct Header {
     parting: vfield::Parting,
@@ -36,13 +36,9 @@ impl Header {
             let mut part_attrs: HashMap<String, attrib::Attribute> = HashMap::new();
             let mut part_attr_order = Vec::new();
             loop {
-                let attrname = String::from_utf8(
-                    funcs::get_bytes_until_null(data)
-                ).unwrap();
+                let attrname = String::from_utf8(funcs::get_bytes_until_null(data)).unwrap();
                 data.drain(..1);
-                let attrtype = String::from_utf8(
-                    funcs::get_bytes_until_null(data)
-                ).unwrap();
+                let attrtype = String::from_utf8(funcs::get_bytes_until_null(data)).unwrap();
                 data.drain(..1);
                 let attrlen = funcs::get_sized_int_4bytes(data);
                 let attr_bytes = data.drain(..attrlen as usize).collect::<Vec<u8>>();
@@ -51,7 +47,8 @@ impl Header {
                     data_window.push(data_win);
                     part_attr_order.push(attrname.clone());
                 } else {
-                    let attr = attrib::Attribute::new(attrname.clone(), attrtype, attrlen, attr_bytes);
+                    let attr =
+                        attrib::Attribute::new(attrname.clone(), attrtype, attrlen, attr_bytes);
                     part_attrs.insert(attrname.clone(), attr);
                     part_attr_order.push(attrname.clone());
                 };
@@ -59,7 +56,7 @@ impl Header {
                     data.drain(..1);
                     break;
                 };
-            };
+            }
             parts.push(part_attrs);
             attr_order.push(part_attr_order);
             match *parting {
@@ -69,9 +66,9 @@ impl Header {
                         data.drain(..1);
                         break 'partsloop;
                     }
-                },
+                }
             }
-        };
+        }
         Self {
             parting: parting.clone(),
             parts,

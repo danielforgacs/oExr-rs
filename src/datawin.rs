@@ -11,7 +11,12 @@ impl From<Vec<u8>> for DataWin {
         let y_min = u32::from_le_bytes(value.drain(..4).collect::<Vec<u8>>().try_into().unwrap());
         let x_max = u32::from_le_bytes(value.drain(..4).collect::<Vec<u8>>().try_into().unwrap());
         let y_max = u32::from_le_bytes(value.drain(..4).collect::<Vec<u8>>().try_into().unwrap());
-        Self { x_min, y_min, x_max, y_max }
+        Self {
+            x_min,
+            y_min,
+            x_max,
+            y_max,
+        }
     }
 }
 
@@ -29,7 +34,6 @@ impl DataWin {
         data
     }
 }
-
 
 #[cfg(test)]
 mod test {

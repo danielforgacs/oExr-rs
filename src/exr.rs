@@ -1,6 +1,6 @@
 use crate::funcs;
-use crate::vfield;
 use crate::head;
+use crate::vfield;
 
 /// exr magix number bytes: 0x76, 0x2f, 0x31, 0x01
 const MAGIC_NUMBER_U32: u32 = 20000630;
@@ -48,7 +48,10 @@ impl Exr {
 
     pub fn serialize(&self) -> Vec<u8> {
         let mut data = MAGIC_NUMBER_U32.to_le_bytes().to_vec();
-        data.extend(vfield::serialize_version_field(self.format_version, self.multipart_bit.clone()));
+        data.extend(vfield::serialize_version_field(
+            self.format_version,
+            self.multipart_bit.clone(),
+        ));
         data.extend(self.header.serialize());
         data.extend(self.left_over_bytes.clone());
         data
