@@ -3,6 +3,7 @@ use crate::datawin;
 use crate::funcs;
 use crate::prelude::*;
 use crate::vfield;
+use crate::chlist;
 
 pub struct Header {
     parting: vfield::Parting,
@@ -46,9 +47,9 @@ impl Header {
                     let data_win = datawin::DataWin::from(attr_bytes);
                     data_window.push(data_win);
                     part_attr_order.push(attrname.clone());
+                } else if attrname == "channels" {
                 } else {
-                    let attr =
-                        attrib::Attribute::new(attrname.clone(), attrtype, attrlen, attr_bytes);
+                    let attr = attrib::Attribute::new(attrname.clone(), attrtype, attrlen, attr_bytes);
                     part_attrs.insert(attrname.clone(), attr);
                     part_attr_order.push(attrname.clone());
                 };

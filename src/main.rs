@@ -4,6 +4,7 @@ mod exr;
 mod funcs;
 mod head;
 mod vfield;
+mod chlist;
 mod prelude {
     pub use std::collections::HashMap;
     pub use std::fs::{read, write};
