@@ -58,8 +58,13 @@ impl Exr {
         println!("res y: {}", self.header.get_res_y());
         println!("first offset: {}", data.len() as u32 + (8 * self.header.get_res_y()));
 
-        // calculating offsets.
-        let scanline_count = self.header.get_res_y();
+        // calculating offsets. - SAMPLE IMAGE ONLY!
+        let x_res = 4;
+        let y_res = 3;
+        let scan_line_bytes = 4;
+        let pixel_data_size = 4;
+        let channel_count = 2;
+
         data
     }
 }
