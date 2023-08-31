@@ -2,6 +2,7 @@ mod structs;
 mod consts;
 mod prelude {
     pub use super::structs::exr;
+    pub use half::f16;
 }
 use prelude::*;
 
