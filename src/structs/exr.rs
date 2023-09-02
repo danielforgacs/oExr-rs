@@ -26,11 +26,7 @@ impl Exr {
             let mut row_pixels: Vec<u8> = vec![];
             for chan in &self.channels {
                 let serial_chan = chan.serialize(4, 1);
-                dbg!(serial_chan);
-                // row_pixels.extend(serial_chan[y]);
             }
-            // dbg!(&row_pixels.len());
-            // dbg!(&row_pixels);
         }
         exr_bytes
     }
