@@ -8,21 +8,35 @@ pub struct Exr {
     magic_number: [u8; 4],
     version_field: vfield::VersionField,
     channels: Vec<chan::Channel>,
+    res_x: u32,
+    res_y: u32,
 }
 
 impl Exr {
-    pub fn new() -> Self {
+    pub fn new(res_x: u32, res_y: u32) -> Self {
         Self {
             magic_number: consts::MAGIC_NUMBER,
             version_field: vfield::VersionField::new(),
             channels: vec![],
+            res_x,
+            res_y,
         }
     }
 
     pub fn serialize(&self) -> Vec<u8> {
-        let mut exr_bytes = vec![];
+        let mut exr_bytes = Vec::new();
         exr_bytes.extend(self.magic_number);
         exr_bytes.extend(self.version_field.serialize());
+        {
+            for y in 0..self.res_y {
+                let mut scan_line = Vec::new();
+                for channel in &self.channels {
+                    let chan_bytes = channel.serialize_to_resolution(self.res_x, self.res_y);
+                    scan_line.extend(chan_bytes[y as usize].clone());
+                }
+                exr_bytes.extend(scan_line);
+            }
+        }
         exr_bytes
     }
 }
@@ -33,7 +47,7 @@ mod tests {
 
     #[test]
     fn test_exr() {
-        let mut exr = Exr::new();
+        let mut exr = Exr::new(4, 3);
 
         let pixel_data = vec![
             f16::from_le_bytes([0x00, 0x00]), f16::from_le_bytes([0x54, 0x29]), f16::from_le_bytes([0xd5, 0x35]), f16::from_le_bytes([0xe8, 0x2d]),
