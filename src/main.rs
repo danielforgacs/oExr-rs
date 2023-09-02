@@ -7,14 +7,14 @@ mod prelude {
 use prelude::*;
 
 fn main() {
-    {
-        let exr = exr::Exr::new();
-        for b in exr.serialize() {
-            print!("{}", b);
-        }
-    }
-    {
-        let exr = exr::Exr::new();
-        std::fs::write("generated.exr", exr.serialize()).unwrap();
-    }
+    // {
+    //     let exr = exr::Exr::new(4, 3);
+    //     for b in exr.serialize() {
+    //         print!("{}", b);
+    //     }
+    // }
+    // {
+    //     let exr = exr::Exr::new(4, 3);
+    //     std::fs::write("generated.exr", exr.serialize()).unwrap();
+    // }
 }
