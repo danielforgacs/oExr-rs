@@ -2,6 +2,7 @@ use crate::prelude::*;
 use crate::consts;
 use super::vfield;
 use super::chan;
+use super::chan::{Channel, ChannelType};
 
 pub struct Exr {
     magic_number: [u8; 4],
@@ -22,12 +23,6 @@ impl Exr {
         let mut exr_bytes = vec![];
         exr_bytes.extend(self.magic_number);
         exr_bytes.extend(self.version_field.serialize());
-        for y in 0..1 {
-            let mut row_pixels: Vec<u8> = vec![];
-            for chan in &self.channels {
-                let serial_chan = chan.serialize(4, 1);
-            }
-        }
         exr_bytes
     }
 }
@@ -39,21 +34,24 @@ mod tests {
     #[test]
     fn test_exr() {
         let mut exr = Exr::new();
-        let chan_G_pixel_values = vec![
-            f16::from_le_bytes([0x00, 0x00]),
-            f16::from_le_bytes([0x54, 0x29]),
-            f16::from_le_bytes([0xd5, 0x35]),
-            f16::from_le_bytes([0xe8, 0x2d]),
+
+        let pixel_data = vec![
+            f16::from_le_bytes([0x00, 0x00]), f16::from_le_bytes([0x54, 0x29]), f16::from_le_bytes([0xd5, 0x35]), f16::from_le_bytes([0xe8, 0x2d]),
+            f16::from_le_bytes([0x37, 0x38]), f16::from_le_bytes([0x76, 0x33]), f16::from_le_bytes([0x74, 0x3b]), f16::from_le_bytes([0x73, 0x38]),
+            f16::from_le_bytes([0x23, 0x3a]), f16::from_le_bytes([0x0a, 0x34]), f16::from_le_bytes([0x02, 0x3b]), f16::from_le_bytes([0x5d, 0x3b]),
         ];
-        let chan_Z_pixel_values = vec![
-            f32::from_le_bytes([0x5c, 0x28, 0x81, 0x3a]),
-            f32::from_le_bytes([0xcf, 0xe1, 0x34, 0x3e]),
-            f32::from_le_bytes([0x8b, 0x0b, 0xbb, 0x3d]),
-            f32::from_le_bytes([0x89, 0x74, 0xf9, 0x3e]),
-        ];
-        let chan_g = chan::Channel::new("G", chan::ChannelType::Half(chan_G_pixel_values));
-        let chan_z = chan::Channel::new("Z", chan::ChannelType::FLoat(chan_Z_pixel_values));
+        let chan_g = Channel::new("G", ChannelType::Half(pixel_data));
         exr.channels.push(chan_g);
+
+        let pixel_data = vec![
+            f32::from_le_bytes([0x5c, 0x28, 0x81, 0x3a]), f32::from_le_bytes([0xcf, 0xe1, 0x34, 0x3e]), f32::from_le_bytes([0x8b, 0x0b, 0xbb, 0x3d]), f32::from_le_bytes([0x89, 0x74, 0xf9, 0x3e]),
+            f32::from_le_bytes([0x7f, 0xab, 0xe8, 0x3e]), f32::from_le_bytes([0x8a, 0xcf, 0x54, 0x3f]), f32::from_le_bytes([0x5b, 0x6c, 0x11, 0x3f]), f32::from_le_bytes([0x20, 0x35, 0x50, 0x3d]),
+            f32::from_le_bytes([0x38, 0xf3, 0x9a, 0x3c]), f32::from_le_bytes([0x4d, 0xad, 0x98, 0x3e]), f32::from_le_bytes([0x1c, 0x14, 0x08, 0x3f]), f32::from_le_bytes([0x4c, 0xf3, 0x03, 0x3f]),
+        ];
+        let chan_z = Channel::new("Z", ChannelType::FLoat(pixel_data));
+        exr.channels.push(chan_z);
+
+
         let expected = vec![
             0x76, 0x2f, 0x31, 0x01,
             0x02, 0x00, 0x00, 0x00,
