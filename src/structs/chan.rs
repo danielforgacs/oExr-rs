@@ -40,7 +40,7 @@ impl Channel {
         data
     }
 
-    pub fn serialize_to_resolution(&self, res_x: usize, res_y: usize) -> Vec<Vec<u8>> {
+    pub fn serialize_to_resolution(&self, res_x: u32, res_y: u32) -> Vec<Vec<u8>> {
         let mut data = Vec::new();
         let mut index = 0;
         for y in 0..res_y {
@@ -78,7 +78,7 @@ mod tests {
         let value_byte_count = 2;
         let (res_x, res_y) = (expected[0].len() / value_byte_count, expected.len());
         let chan = Channel::new("chan", ChannelType::Half(pixel_data));
-        assert_eq!(chan.serialize_to_resolution(res_x, res_y), expected);
+        assert_eq!(chan.serialize_to_resolution(res_x as u32, res_y as u32), expected);
     }
 
     #[test]
@@ -96,6 +96,6 @@ mod tests {
         let value_byte_count = 4;
         let (res_x, res_y) = (expected[0].len() / value_byte_count, expected.len());
         let chan = Channel::new("chan", ChannelType::FLoat(pixel_data));
-        assert_eq!(chan.serialize_to_resolution(res_x, res_y), expected);
+        assert_eq!(chan.serialize_to_resolution(res_x as u32, res_y as u32), expected);
     }
 }
