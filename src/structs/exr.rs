@@ -22,6 +22,16 @@ impl Exr {
         let mut exr_bytes = vec![];
         exr_bytes.extend(self.magic_number);
         exr_bytes.extend(self.version_field.serialize());
+        for y in 0..1 {
+            let mut row_pixels: Vec<u8> = vec![];
+            for chan in &self.channels {
+                let serial_chan = chan.serialize(4, 1);
+                dbg!(serial_chan);
+                // row_pixels.extend(serial_chan[y]);
+            }
+            // dbg!(&row_pixels.len());
+            // dbg!(&row_pixels);
+        }
         exr_bytes
     }
 }
@@ -32,7 +42,7 @@ mod tests {
 
     #[test]
     fn test_exr() {
-        let exr = Exr::new();
+        let mut exr = Exr::new();
         let chan_G_pixel_values = vec![
             f16::from_le_bytes([0x00, 0x00]),
             f16::from_le_bytes([0x54, 0x29]),
@@ -47,9 +57,7 @@ mod tests {
         ];
         let chan_g = chan::Channel::new("G", chan::ChannelType::Half(chan_G_pixel_values));
         let chan_z = chan::Channel::new("Z", chan::ChannelType::FLoat(chan_Z_pixel_values));
-
-
-
+        exr.channels.push(chan_g);
         let expected = vec![
             0x76, 0x2f, 0x31, 0x01,
             0x02, 0x00, 0x00, 0x00,
