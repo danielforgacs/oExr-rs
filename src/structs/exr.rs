@@ -34,6 +34,9 @@ impl Exr {
                     let chan_bytes = channel.serialize_to_resolution(self.res_x, self.res_y);
                     scan_line.extend(chan_bytes[y as usize].clone());
                 }
+                exr_bytes.extend(y.to_le_bytes());
+                let pixel_value_byte_count = (scan_line.len() as u32).to_le_bytes();
+                exr_bytes.extend(pixel_value_byte_count);
                 exr_bytes.extend(scan_line);
             }
         }
@@ -74,6 +77,10 @@ mod tests {
 
 
             // scanline 0 pixel values
+                // scan line index
+                0x00, 0x00, 0x00, 0x00,
+                // pixel data size
+                0x18, 0x00, 0x00, 0x00,
                 // channel G
                 0x00, 0x00, 0x54, 0x29, 0xd5, 0x35, 0xe8, 0x2d,
                 // channel Z
@@ -81,12 +88,20 @@ mod tests {
 
 
             // scanline 1 pixel values
+                // scan line index
+                0x01, 0x00, 0x00, 0x00,
+                // pixel data size
+                0x18, 0x00, 0x00, 0x00,
                 // channel g
                 0x37, 0x38, 0x76, 0x33, 0x74, 0x3b, 0x73, 0x38,
                 // channel Z
                 0x7f, 0xab, 0xe8, 0x3e, 0x8a, 0xcf, 0x54, 0x3f, 0x5b, 0x6c, 0x11, 0x3f, 0x20, 0x35, 0x50, 0x3d,
 
             // scanline 2 pixel values
+                // scan line index
+                0x02, 0x00, 0x00, 0x00,
+                // pixel data size
+                0x18, 0x00, 0x00, 0x00,
                 // channel g
                 0x23, 0x3a, 0x0a, 0x34, 0x02, 0x3b, 0x5d, 0x3b,
                 // channel Z
