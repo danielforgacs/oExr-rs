@@ -20,6 +20,26 @@ impl Channel {
         }
     }
 
+    pub fn get_name(&self) -> String {
+        self.name.clone()
+    }
+
+    fn get_pixel_type(&self) -> i32 {
+        match self.pixel_values {
+            ChannelType::Half(_) => 1,
+            ChannelType::FLoat(_) => 2,
+        }
+    }
+
+    pub fn get_channel_attribute(&self) -> Vec<u8> {
+        let mut channel_attr = Vec::new();
+        channel_attr.extend(self.name.as_bytes());
+        channel_attr.push(0);
+        channel_attr.extend(self.get_pixel_type().to_le_bytes());
+        channel_attr.push(0);
+        channel_attr
+    }
+
     pub fn serialize(&self, res_x: usize, res_y: usize) -> Vec<Vec<u8>> {
         let mut data: Vec<Vec<u8>> = Vec::new();
         match &self.pixel_values {
@@ -97,5 +117,22 @@ mod tests {
         let (res_x, res_y) = (expected[0].len() / value_byte_count, expected.len());
         let chan = Channel::new("chan", ChannelType::FLoat(pixel_data));
         assert_eq!(chan.serialize_to_resolution(res_x as u32, res_y as u32), expected);
+    }
+
+    #[test]
+    fn test_get_channel_attribute() {
+        let pixel_data = vec![f16::from_f32(0.5)];
+        let expected = vec![
+            // "G"
+            0x47,
+            // null byte
+            0x00,
+            // HALF
+            0x01, 0x00, 0x00, 0x00,
+            // null byte
+            0x00,
+        ];
+        let chan = Channel::new("G", ChannelType::Half(pixel_data));
+        assert_eq!(chan.get_channel_attribute(), expected);
     }
 }
