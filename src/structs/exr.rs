@@ -2,12 +2,13 @@ use crate::prelude::*;
 use crate::consts;
 use super::vfield;
 use super::chan;
-// use super::chan::{Channel, ChannelType};
+use super::attrs;
 
 pub struct Exr {
     magic_number: [u8; 4],
     version_field: vfield::VersionField,
     channels: Vec<chan::Channel>,
+    compression: attrs::Compression,
     res_x: u32,
     res_y: u32,
 }
@@ -18,6 +19,7 @@ impl Exr {
             magic_number: consts::MAGIC_NUMBER,
             version_field: vfield::VersionField::new(),
             channels: vec![],
+            compression: attrs::Compression::No,
             res_x,
             res_y,
         }
@@ -54,6 +56,7 @@ impl Exr {
         exr_bytes.extend(self.magic_number);
         exr_bytes.extend(self.version_field.serialize());
         exr_bytes.extend(self.get_channels_attr_bytes());
+        exr_bytes.extend(self.compression.serialise());
         {
             for y in 0..self.res_y {
                 let mut scan_line = Vec::new();
@@ -141,6 +144,15 @@ mod tests {
                 0x01, 0x00, 0x00, 0x00,
                 // ySampling
                 0x01, 0x00, 0x00, 0x00,
+
+
+                // compression attr
+                0x63, 0x6f, 0x6d, 0x70, 0x72, 0x65, 0x73, 0x73, 0x69, 0x6f, 0x6e,
+                0x00,
+                0x63, 0x6f, 0x6d, 0x70, 0x72, 0x65, 0x73, 0x73, 0x69, 0x6f, 0x6e,
+                0x00,
+                0x01, 0x00, 0x00, 0x00,
+                0x00,
 
 
 
