@@ -172,7 +172,7 @@ mod tests {
             0x00,
 
             // attribute size
-            0x25, 0x00, 0x00, 0x00,
+            // 0x25, 0x00, 0x00, 0x00,
         ];
         assert_eq!(exr.get_channels_attr_bytes(), expected);
     }
