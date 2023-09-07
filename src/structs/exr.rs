@@ -28,11 +28,23 @@ impl Exr {
     }
 
     fn get_channels_attr_bytes(&self) -> Vec<u8> {
+        let mut channels = Vec::new();
+        for chan in &self.channels {
+            channels.extend(chan.get_channel_attribute());
+        }
+        // the null byte after this attribute is counted in the size
+        let channels_byte_count = {
+            let mut size = channels.len() as i32;
+            size += 1;
+            size
+        };
+        dbg!(&channels_byte_count);
         let mut attr_data = Vec::new();
         attr_data.extend("channels".as_bytes());
         attr_data.push(0);
         attr_data.extend("chlist".as_bytes());
         attr_data.push(0);
+        attr_data.extend(channels_byte_count.to_le_bytes());
         attr_data
     }
 
@@ -172,7 +184,7 @@ mod tests {
             0x00,
 
             // attribute size
-            // 0x25, 0x00, 0x00, 0x00,
+            0x25, 0x00, 0x00, 0x00,
         ];
         assert_eq!(exr.get_channels_attr_bytes(), expected);
     }
