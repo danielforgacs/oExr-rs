@@ -153,7 +153,7 @@ mod tests {
     fn test_get_channel_attribute_for_float() {
         let pixel_data = vec![0.5_f32];
         let expected = vec![
-            // "G"
+            // "Z"
             0x5a,
             // null byte
             0x00,
