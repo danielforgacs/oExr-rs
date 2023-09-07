@@ -127,7 +127,7 @@ mod tests {
     }
 
     #[test]
-    fn test_get_channel_attribute() {
+    fn test_get_channel_attribute_for_half() {
         let pixel_data = vec![f16::from_f32(0.5)];
         let expected = vec![
             // "G"
@@ -146,6 +146,29 @@ mod tests {
             0x01, 0x00, 0x00, 0x00,
         ];
         let chan = Channel::new("G", ChannelType::Half(pixel_data));
+        assert_eq!(chan.get_channel_attribute(), expected);
+    }
+
+    #[test]
+    fn test_get_channel_attribute_for_float() {
+        let pixel_data = vec![0.5_f32];
+        let expected = vec![
+            // "G"
+            0x5a,
+            // null byte
+            0x00,
+            // HALF
+            0x02, 0x00, 0x00, 0x00,
+            // pLinear
+            0x00,
+            // reserved, three char, should be zero
+            0x00, 0x00, 0x00,
+            // xSampling
+            0x01, 0x00, 0x00, 0x00,
+            // ySampling
+            0x01, 0x00, 0x00, 0x00,
+        ];
+        let chan = Channel::new("Z", ChannelType::FLoat(pixel_data));
         assert_eq!(chan.get_channel_attribute(), expected);
     }
 }
