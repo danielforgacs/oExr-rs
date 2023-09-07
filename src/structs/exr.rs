@@ -45,6 +45,7 @@ impl Exr {
         attr_data.extend("chlist".as_bytes());
         attr_data.push(0);
         attr_data.extend(channels_byte_count.to_le_bytes());
+        attr_data.extend(channels);
         attr_data
     }
 
@@ -109,16 +110,37 @@ mod tests {
                 // null byte
                 0x00,
                 // attribute size
-                // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                0x25, 0x00, 0x00, 0x00,
 
-                // Channel "G" name:
+                // "G"
                 0x47,
                 // null byte
                 0x00,
-                // Channel "Z" name:
+                // HALF
+                0x01, 0x00, 0x00, 0x00,
+                // pLinear
+                0x00,
+                // reserved, three char, should be zero
+                0x00, 0x00, 0x00,
+                // xSampling
+                0x01, 0x00, 0x00, 0x00,
+                // ySampling
+                0x01, 0x00, 0x00, 0x00,
+
+                // "Z"
                 0x5a,
                 // null byte
                 0x00,
+                // HALF
+                0x02, 0x00, 0x00, 0x00,
+                // pLinear
+                0x00,
+                // reserved, three char, should be zero
+                0x00, 0x00, 0x00,
+                // xSampling
+                0x01, 0x00, 0x00, 0x00,
+                // ySampling
+                0x01, 0x00, 0x00, 0x00,
 
 
 
@@ -154,7 +176,7 @@ mod tests {
                 // channel Z
                 0x38, 0xf3, 0x9a, 0x3c, 0x4d, 0xad, 0x98, 0x3e, 0x1c, 0x14, 0x08, 0x3f, 0x4c, 0xf3, 0x03, 0x3f,
         ];
-        // assert_eq!(exr.serialize(), expected);
+        assert_eq!(exr.serialize(), expected);
     }
 
     #[test]
@@ -185,6 +207,37 @@ mod tests {
 
             // attribute size
             0x25, 0x00, 0x00, 0x00,
+
+            // "G"
+            0x47,
+            // null byte
+            0x00,
+            // HALF
+            0x01, 0x00, 0x00, 0x00,
+            // pLinear
+            0x00,
+            // reserved, three char, should be zero
+            0x00, 0x00, 0x00,
+            // xSampling
+            0x01, 0x00, 0x00, 0x00,
+            // ySampling
+            0x01, 0x00, 0x00, 0x00,
+
+            // "Z"
+            0x5a,
+            // null byte
+            0x00,
+            // HALF
+            0x02, 0x00, 0x00, 0x00,
+            // pLinear
+            0x00,
+            // reserved, three char, should be zero
+            0x00, 0x00, 0x00,
+            // xSampling
+            0x01, 0x00, 0x00, 0x00,
+            // ySampling
+            0x01, 0x00, 0x00, 0x00,
+
         ];
         assert_eq!(exr.get_channels_attr_bytes(), expected);
     }
