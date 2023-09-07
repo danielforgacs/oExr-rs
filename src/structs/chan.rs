@@ -36,7 +36,14 @@ impl Channel {
         channel_attr.extend(self.name.as_bytes());
         channel_attr.push(0);
         channel_attr.extend(self.get_pixel_type().to_le_bytes());
+        // pLinear
         channel_attr.push(0);
+        // reserved, three char, should be zero
+        channel_attr.extend([0, 0, 0]);
+        // xSampling
+        channel_attr.extend(1_i32.to_le_bytes());
+        // ySampling
+        channel_attr.extend(1_i32.to_le_bytes());
         channel_attr
     }
 
@@ -129,8 +136,14 @@ mod tests {
             0x00,
             // HALF
             0x01, 0x00, 0x00, 0x00,
-            // null byte
+            // pLinear
             0x00,
+            // reserved, three char, should be zero
+            0x00, 0x00, 0x00,
+            // xSampling
+            0x01, 0x00, 0x00, 0x00,
+            // ySampling
+            0x01, 0x00, 0x00, 0x00,
         ];
         let chan = Channel::new("G", ChannelType::Half(pixel_data));
         assert_eq!(chan.get_channel_attribute(), expected);
