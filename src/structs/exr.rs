@@ -12,11 +12,13 @@ pub struct Exr {
     res_x: u32,
     res_y: u32,
     data_window: attrs::DataWindow,
+    display_window: attrs::DataWindow,
 }
 
 impl Exr {
     pub fn new(res_x: u32, res_y: u32) -> Self {
         let data_window = attrs::DataWindow::new(res_x as i32, res_y as i32);
+        let display_window = data_window.clone();
         Self {
             magic_number: consts::MAGIC_NUMBER,
             version_field: vfield::VersionField::new(),
@@ -25,6 +27,7 @@ impl Exr {
             res_x,
             res_y,
             data_window,
+            display_window,
         }
     }
 
@@ -61,6 +64,7 @@ impl Exr {
         exr_bytes.extend(self.get_channels_attr_bytes());
         exr_bytes.extend(self.compression.serialise());
         exr_bytes.extend(self.data_window.serialize());
+        exr_bytes.extend(self.display_window.serialize_as_display_window());
         {
             for y in 0..self.res_y {
                 let mut scan_line = Vec::new();
@@ -150,7 +154,7 @@ mod tests {
                 0x01, 0x00, 0x00, 0x00,
 
 
-                // compression attr
+                // "compression" attr
                 0x63, 0x6f, 0x6d, 0x70, 0x72, 0x65, 0x73, 0x73, 0x69, 0x6f, 0x6e,
                 0x00,
                 0x63, 0x6f, 0x6d, 0x70, 0x72, 0x65, 0x73, 0x73, 0x69, 0x6f, 0x6e,
@@ -158,8 +162,15 @@ mod tests {
                 0x01, 0x00, 0x00, 0x00,
                 0x00,
 
-                // datawindow attr
+                // "dataWindow" attr
                 0x64, 0x61, 0x74, 0x61, 0x57, 0x69, 0x6e, 0x64, 0x6f, 0x77,
+                0x00,
+                0x62, 0x6f, 0x78, 0x32, 0x69,
+                0x00,
+                0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00,
+
+                // "displayWindow" attr
+                0x64, 0x69, 0x73, 0x70, 0x6c, 0x61, 0x79, 0x57, 0x69, 0x6e, 0x64, 0x6f, 0x77,
                 0x00,
                 0x62, 0x6f, 0x78, 0x32, 0x69,
                 0x00,

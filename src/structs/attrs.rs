@@ -3,6 +3,7 @@ pub enum Compression {
 }
 
 // dataWindow: box2i:  4 x int: xMin, yMin, xMax, yMax
+#[derive(Clone)]
 pub struct DataWindow {
     x_min: i32,
     y_min: i32,
@@ -47,6 +48,20 @@ impl DataWindow {
     pub fn serialize(&self) -> Vec<u8> {
         let mut data = Vec::new();
         data.extend("dataWindow".bytes());
+        data.push(0);
+        data.extend("box2i".bytes());
+        data.push(0);
+        data.extend({4_i32 * 4}.to_le_bytes());
+        data.extend(self.x_min.to_le_bytes());
+        data.extend(self.y_min.to_le_bytes());
+        data.extend(self.x_max.to_le_bytes());
+        data.extend(self.y_max.to_le_bytes());
+        data
+    }
+
+    pub fn serialize_as_display_window(&self) -> Vec<u8> {
+        let mut data = Vec::new();
+        data.extend("displayWindow".bytes());
         data.push(0);
         data.extend("box2i".bytes());
         data.push(0);
