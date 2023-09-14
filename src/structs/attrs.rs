@@ -17,6 +17,10 @@ pub enum LineOrder {
     RANDOM_Y,
 }
 
+pub struct pixelAspectRatio {
+    value: f32,
+}
+
 impl Compression {
     pub fn serialise(&self) -> Vec<u8> {
         let mut bytes = Vec::new();
@@ -93,6 +97,22 @@ impl LineOrder {
             Self::RANDOM_Y => 2_u8.to_le_bytes(),
         };
         data.extend(value);
+        data
+    }
+}
+
+impl pixelAspectRatio {
+    pub fn new(value: f32) -> Self {
+        Self { value }
+    }
+
+    pub fn serialise(&self) -> Vec<u8> {
+        let mut data = "pixelAspectRatio".as_bytes().to_vec();
+        data.push(0);
+        data.extend("float".bytes());
+        data.push(0);
+        data.extend(4_i32.to_le_bytes());
+        data.extend(self.value.to_le_bytes());
         data
     }
 }

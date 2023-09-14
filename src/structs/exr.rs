@@ -14,6 +14,7 @@ pub struct Exr {
     data_window: attrs::DataWindow,
     display_window: attrs::DataWindow,
     line_order: attrs::LineOrder,
+    pixel_aspect_ratio: attrs::pixelAspectRatio,
 }
 
 impl Exr {
@@ -30,6 +31,7 @@ impl Exr {
             data_window,
             display_window,
             line_order: attrs::LineOrder::INCREASING_Y,
+            pixel_aspect_ratio: attrs::pixelAspectRatio::new(1.0),
         }
     }
 
@@ -68,6 +70,7 @@ impl Exr {
         exr_bytes.extend(self.data_window.serialize());
         exr_bytes.extend(self.display_window.serialize_as_display_window());
         exr_bytes.extend(self.line_order.serialise());
+        exr_bytes.extend(self.pixel_aspect_ratio.serialise());
         {
             for y in 0..self.res_y {
                 let mut scan_line = Vec::new();
@@ -186,6 +189,14 @@ mod tests {
                 0x00,
                 0x01, 0x00, 0x00, 0x00,
                 0x00,
+
+                // "pixelAspectRatio" attr
+                0x70, 0x69, 0x78, 0x65, 0x6c, 0x41, 0x73, 0x70, 0x65, 0x63, 0x74, 0x52, 0x61, 0x74, 0x69, 0x6f,
+                0x00,
+                0x66, 0x6c, 0x6f, 0x61, 0x74,
+                0x00,
+                0x04, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x80, 0x3f,
 
 
 
