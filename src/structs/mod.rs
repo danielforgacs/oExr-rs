@@ -1,4 +1,4 @@
 pub mod exr;
 mod vfield;
-mod chan;
+pub mod chan;
 mod attrs;
