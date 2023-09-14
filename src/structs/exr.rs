@@ -62,6 +62,7 @@ impl Exr {
         attr_data.push(0);
         attr_data.extend(channels_byte_count.to_le_bytes());
         attr_data.extend(channels);
+        attr_data.push(0);
         attr_data
     }
 
@@ -165,6 +166,9 @@ mod tests {
                 0x01, 0x00, 0x00, 0x00,
                 // ySampling
                 0x01, 0x00, 0x00, 0x00,
+
+                // null byte
+                0x00,
 
 
                 // "compression" attr
@@ -320,6 +324,8 @@ mod tests {
             0x01, 0x00, 0x00, 0x00,
             // ySampling
             0x01, 0x00, 0x00, 0x00,
+
+            0x00,
 
         ];
         assert_eq!(exr.get_channels_attr_bytes(), expected);
