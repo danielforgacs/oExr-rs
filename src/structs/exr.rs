@@ -13,6 +13,7 @@ pub struct Exr {
     res_y: u32,
     data_window: attrs::DataWindow,
     display_window: attrs::DataWindow,
+    line_order: attrs::LineOrder,
 }
 
 impl Exr {
@@ -28,6 +29,7 @@ impl Exr {
             res_y,
             data_window,
             display_window,
+            line_order: attrs::LineOrder::INCREASING_Y,
         }
     }
 
@@ -65,6 +67,7 @@ impl Exr {
         exr_bytes.extend(self.compression.serialise());
         exr_bytes.extend(self.data_window.serialize());
         exr_bytes.extend(self.display_window.serialize_as_display_window());
+        exr_bytes.extend(self.line_order.serialise());
         {
             for y in 0..self.res_y {
                 let mut scan_line = Vec::new();
@@ -175,6 +178,14 @@ mod tests {
                 0x62, 0x6f, 0x78, 0x32, 0x69,
                 0x00,
                 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00,
+
+                // "lineOrder" attr
+                0x6c, 0x69, 0x6e, 0x65, 0x4f, 0x72, 0x64, 0x65, 0x72,
+                0x00,
+                0x6c, 0x69, 0x6e, 0x65, 0x4f, 0x72, 0x64, 0x65, 0x72,
+                0x00,
+                0x01, 0x00, 0x00, 0x00,
+                0x00,
 
 
 

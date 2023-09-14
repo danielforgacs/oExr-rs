@@ -11,6 +11,12 @@ pub struct DataWindow {
     y_max: i32,
 }
 
+pub enum LineOrder {
+    INCREASING_Y,
+    DECREASING_Y,
+    RANDOM_Y,
+}
+
 impl Compression {
     pub fn serialise(&self) -> Vec<u8> {
         let mut bytes = Vec::new();
@@ -70,6 +76,23 @@ impl DataWindow {
         data.extend(self.y_min.to_le_bytes());
         data.extend(self.x_max.to_le_bytes());
         data.extend(self.y_max.to_le_bytes());
+        data
+    }
+}
+
+impl LineOrder {
+    pub fn serialise(&self) -> Vec<u8> {
+        let mut data: Vec<u8> = "lineOrder".as_bytes().to_vec();
+        data.push(0);
+        data.extend("lineOrder".bytes());
+        data.push(0);
+        data.extend(1_i32.to_le_bytes());
+        let value = match self {
+            Self::INCREASING_Y => 0_u8.to_le_bytes(),
+            Self::DECREASING_Y => 1_u8.to_le_bytes(),
+            Self::RANDOM_Y => 2_u8.to_le_bytes(),
+        };
+        data.extend(value);
         data
     }
 }
