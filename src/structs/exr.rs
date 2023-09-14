@@ -77,6 +77,7 @@ impl Exr {
         exr_bytes.extend(self.pixel_aspect_ratio.serialise());
         exr_bytes.extend(self.screenWindowCenter.serialise());
         exr_bytes.extend(self.screenWindowWidth.serialise());
+        exr_bytes.push(0);
         {
             for y in 0..self.res_y {
                 let mut scan_line = Vec::new();
@@ -221,7 +222,8 @@ mod tests {
                 0x00, 0x00, 0x80, 0x3f,
 
 
-
+            //
+            0x00,
 
 
 
