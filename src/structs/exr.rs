@@ -15,6 +15,8 @@ pub struct Exr {
     display_window: attrs::DataWindow,
     line_order: attrs::LineOrder,
     pixel_aspect_ratio: attrs::pixelAspectRatio,
+    screenWindowCenter: attrs::screenWindowCenter,
+    screenWindowWidth: attrs::screenWindowWidth,
 }
 
 impl Exr {
@@ -32,6 +34,8 @@ impl Exr {
             display_window,
             line_order: attrs::LineOrder::INCREASING_Y,
             pixel_aspect_ratio: attrs::pixelAspectRatio::new(1.0),
+            screenWindowCenter: attrs::screenWindowCenter::new(0.0, 0.0),
+            screenWindowWidth: attrs::screenWindowWidth::new(1.0),
         }
     }
 
@@ -71,6 +75,8 @@ impl Exr {
         exr_bytes.extend(self.display_window.serialize_as_display_window());
         exr_bytes.extend(self.line_order.serialise());
         exr_bytes.extend(self.pixel_aspect_ratio.serialise());
+        exr_bytes.extend(self.screenWindowCenter.serialise());
+        exr_bytes.extend(self.screenWindowWidth.serialise());
         {
             for y in 0..self.res_y {
                 let mut scan_line = Vec::new();
@@ -197,6 +203,25 @@ mod tests {
                 0x00,
                 0x04, 0x00, 0x00, 0x00,
                 0x00, 0x00, 0x80, 0x3f,
+
+                // "screenWindowCenter" attr
+                0x73, 0x63, 0x72, 0x65, 0x65, 0x6e, 0x57, 0x69, 0x6e, 0x64, 0x6f, 0x77, 0x43, 0x65, 0x6e, 0x74, 0x65, 0x72,
+                0x00,
+                0x76, 0x32, 0x66,
+                0x00,
+                0x08, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+
+                // "screenWindowWidth" attr
+                0x73, 0x63, 0x72, 0x65, 0x65, 0x6e, 0x57, 0x69, 0x6e, 0x64, 0x6f, 0x77, 0x57, 0x69, 0x64, 0x74, 0x68,
+                0x00,
+                0x66, 0x6c, 0x6f, 0x61, 0x74,
+                0x00,
+                0x04, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x80, 0x3f,
+
+
+
 
 
 
