@@ -1,5 +1,5 @@
 [package]
-name = "openexr"
+name = "oexr"
 version = "2023.9.15"
 edition = "2021"
 
