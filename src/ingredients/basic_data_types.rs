@@ -1,6 +1,8 @@
 //! Basic data types from the exr docs.
 //! <https://openexr.com/en/latest/OpenEXRFileLayout.html#basic-data-types>
 
+use super::super::prelude::*;
+
 /// unsigned char, signed: no, size in bytes: 1
 pub type UnsignedChar = u8;
 /// short, signed: yes, size in bytes: 2
@@ -13,3 +15,8 @@ pub type Int = i32;
 pub type UnsignedInt = u32;
 /// unsigned long, signed: no, size in bytes: 8
 pub type UnsignedLong = u64;
+
+// Floating-Point Numbers
+
+// size in bytes: 2
+pub type Half = f16;
