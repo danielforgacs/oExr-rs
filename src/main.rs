@@ -24,7 +24,7 @@ fn main() {
         f32::from_le_bytes([0x38, 0xf3, 0x9a, 0x3c]), f32::from_le_bytes([0x4d, 0xad, 0x98, 0x3e]), f32::from_le_bytes([0x1c, 0x14, 0x08, 0x3f]), f32::from_le_bytes([0x4c, 0xf3, 0x03, 0x3f]),
         f32::from_le_bytes([0x38, 0xf3, 0x9a, 0x3c]), f32::from_le_bytes([0x4d, 0xad, 0x98, 0x3e]), f32::from_le_bytes([0x1c, 0x14, 0x08, 0x3f]), f32::from_le_bytes([0x4c, 0xf3, 0x03, 0x3f]),
     ];
-    let res_x = 4;
+    let res_x = 5;
     let res_y = pixel_data_g.len() as u32 / res_x;
     dbg!(res_x, res_y);
     let mut exr = exr::Exr::new(res_x, res_y);
@@ -32,5 +32,5 @@ fn main() {
     let chan_z = chan::Channel::new("Z", chan::ChannelType::FLoat(pixel_data_z));
     exr.add_channel(chan_g);
     exr.add_channel(chan_z);
-    let _result = std::fs::write("__rnd2.exr", exr.serialize());
+    let _result = std::fs::write("__rnd3.exr", exr.serialize());
 }
