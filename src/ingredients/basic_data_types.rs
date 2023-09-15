@@ -20,3 +20,6 @@ type UnsignedLong = u64;
 
 // size in bytes: 2
 type Half = f16;
+
+// Text strings
+type Text = String;
