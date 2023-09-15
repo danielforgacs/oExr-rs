@@ -10,7 +10,7 @@ type Short = i16;
 /// unsigned short, signed: no, size in bytes: 2
 type UnsignedShort = u16;
 /// int, signed: yes, size in bytes: 4
-type Int = i32;
+pub type Int = i32;
 /// unsigned int, signed: no, size in bytes: 4
 type UnsignedInt = u32;
 /// unsigned long, signed: no, size in bytes: 8
