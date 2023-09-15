@@ -1,1 +1,1 @@
-pub mod datatypes;
+pub mod ingredients;
