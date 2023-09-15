@@ -54,7 +54,6 @@ impl Exr {
             size += 1;
             size
         };
-        dbg!(&channels_byte_count);
         let mut attr_data = Vec::new();
         attr_data.extend("channels".as_bytes());
         attr_data.push(0);
@@ -79,19 +78,37 @@ impl Exr {
         exr_bytes.extend(self.screenWindowCenter.serialise());
         exr_bytes.extend(self.screenWindowWidth.serialise());
         exr_bytes.push(0);
+
+        let offset_byte_count = (self.res_y * 8) as u64;
+        let data_byte_count = exr_bytes.len() as u64;
+        let mut offset = offset_byte_count + data_byte_count;
+        dbg!(&offset);
+
+        // exr_bytes.extend(offset.to_le_bytes());
+        let mut scan_lines = Vec::new();
         {
             for y in 0..self.res_y {
+                exr_bytes.extend(offset.to_le_bytes());
+                let mut line_byte_count = 0;
                 let mut scan_line = Vec::new();
                 for channel in &self.channels {
                     let chan_bytes = channel.serialize_to_resolution(self.res_x, self.res_y);
+                    line_byte_count += chan_bytes.len() as u64;
                     scan_line.extend(chan_bytes[y as usize].clone());
                 }
-                exr_bytes.extend(y.to_le_bytes());
+                let y_bytes = y.to_le_bytes();
+                line_byte_count += y_bytes.len() as u64;
+                scan_lines.extend(y_bytes);
                 let pixel_value_byte_count = (scan_line.len() as u32).to_le_bytes();
-                exr_bytes.extend(pixel_value_byte_count);
-                exr_bytes.extend(scan_line);
+                scan_lines.extend(pixel_value_byte_count);
+                line_byte_count += scan_line.len() as u64;
+                scan_lines.extend(scan_line);
+                offset += line_byte_count - 2;
+                dbg!(&line_byte_count, &offset);
+                // exr_bytes.extend(offset.to_le_bytes());
             }
         }
+        exr_bytes.extend(scan_lines);
         exr_bytes
     }
 }
@@ -228,6 +245,15 @@ mod tests {
 
             //
             0x00,
+
+
+            // Offset table
+                // scanline 0: 319
+                0x3f, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                // scanline 1: 351
+                0x5f, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                // scanline 2: 383
+                0x7f, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 
 
 
