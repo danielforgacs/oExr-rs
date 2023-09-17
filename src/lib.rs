@@ -1,4 +1,4 @@
 mod ingredients;
-mod prelude {
+pub mod prelude {
     pub use half::f16;
 }
